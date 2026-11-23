@@ -71,7 +71,8 @@ facturation des abonnements, super admin, audit et anti-fraude.
 | Rapports journaliers / hebdomadaires / mensuels / annuels, export Excel (CSV) et impression PDF | ✅ |
 | Pointage QR + mode hors connexion avec synchronisation différée | ✅ |
 | Super admin : établissements, suspension, tarifs, formules, transactions, renouvellements, tickets, carte, design du jour | ✅ |
-| Mobile Money (pawaPay) | ⚙️ Code prêt — **nécessite un compte pawaPay** (`PAWAPAY_API_TOKEN`) et une validation sur leur sandbox avant production |
+| Paiement des abonnements | ✅ En espèces auprès d'OSTAPAUL : la facture s'affiche chez l'établissement, le Super Admin l'encaisse (Transactions → « Encaisser en espèces »), l'abonnement est activé pour un mois |
+| Mobile Money (pawaPay) pour les encaissements des établissements | ⚙️ Code prêt — **nécessite un compte pawaPay** (`PAWAPAY_API_TOKEN`) et une validation sur leur sandbox avant production |
 | Assistant IA, OCR | ⚙️ Code prêt — **nécessite `ANTHROPIC_API_KEY`** |
 | SMS / WhatsApp | ⚙️ File d'envoi opérationnelle ; envoi réel **nécessite Twilio** (sinon statut « non configuré ») |
 | Assistant vocal | 🟡 Commandes vocales en français via le navigateur (Chrome/Android) ; le lingala n'est pas reconnu par les moteurs vocaux des navigateurs — mots-clés lingala seulement |

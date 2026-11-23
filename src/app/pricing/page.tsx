@@ -24,7 +24,7 @@ export default async function Pricing({ searchParams }: { searchParams: Promise<
         <Link href={auth.user ? "/app" : "/login"} className="btn-ghost">{auth.user ? "Mon espace" : "Connexion"}</Link>
       </header>
       <h1 className="text-3xl font-extrabold">Choisissez votre secteur et votre formule</h1>
-      <p className="mt-2 text-slate-600">Tarifs mensuels en dollars américains. Essai gratuit de {trial} heures, sans carte bancaire. Paiement par Orange Money, Airtel Money, M-Pesa ou en espèces.</p>
+      <p className="mt-2 text-slate-600">Tarifs mensuels en dollars américains. Essai gratuit de {trial} heures, sans carte bancaire. Abonnement réglé en espèces auprès d'OSTAPAUL MANAGER.</p>
       <div className="mt-6 flex flex-wrap gap-2" role="tablist">
         {SECTORS.map((x) => (
           <Link key={x.key} href={`/pricing?sector=${x.key}`} role="tab" aria-selected={x.key === sector}

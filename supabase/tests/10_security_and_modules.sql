@@ -304,6 +304,10 @@ select tests.fails('select public.admin_overview()', 'vue globale refusée hors 
 select tests.act('00000000-0000-0000-0000-0000000000ad');
 select tests.ok((public.admin_overview() ->> 'tenants_total')::int = 4, 'super admin : tous les établissements');
 select tests.ok((public.admin_overview() ->> 'revenue_total_usd')::numeric = 40, 'super admin : revenus plateforme');
+select tests.put('inv_b', (public.create_renewal_invoice(tests.uid('tB'))).id::text);
+select tests.ok(public.admin_record_subscription_cash(tests.uid('inv_b'), 'Directeur') is not null, 'super admin : encaissement espèces d''un abonnement');
+select tests.ok((select status = 'active' and current_period_end > now() + interval '29 days' from public.subscriptions where tenant_id = tests.uid('tB')),
+  'abonnement activé après paiement en espèces auprès du super admin');
 select public.admin_set_tenant_status(tests.uid('tP'), 'suspended', 'Test');
 select tests.act('00000000-0000-0000-0000-00000000000a');
 select tests.ok(not public.tenant_is_active(tests.uid('tP')), 'établissement suspendu : inactif');

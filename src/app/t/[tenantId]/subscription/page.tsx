@@ -6,8 +6,6 @@ import { PlanComparison } from "@/components/PlanComparison";
 import { dateTime, date, money, METHOD_LABELS } from "@/lib/format";
 import { TIER_LABEL, type PlanRow } from "@/lib/plans";
 import { failIfError, str, withParam } from "@/lib/server-actions";
-import { isConfigured } from "@/lib/payments/pawapay";
-import { paySubscription } from "./actions";
 
 async function changePlan(fd: FormData) {
   "use server";
@@ -40,11 +38,12 @@ export default async function Subscription({ params, searchParams }: { params: P
   const ctx = await getTenantContext(tenantId);
   const supabase = await createClient();
   const billingId = ctx.tenant.parent_id ?? tenantId;
-  const [{ data: plans }, { data: sub }, { data: invoices }, { data: pays }] = await Promise.all([
+  const [{ data: plans }, { data: sub }, { data: invoices }, { data: pays }, { data: support }] = await Promise.all([
     supabase.from("plans").select("id, sector, tier, name, price_usd, max_extra_users, features").eq("sector", ctx.tenant.sector).eq("is_active", true),
     supabase.from("subscriptions").select("*, plans(name, tier, price_usd)").eq("tenant_id", billingId).maybeSingle(),
     supabase.from("subscription_invoices").select("*, plans(name)").eq("tenant_id", billingId).order("created_at", { ascending: false }),
     supabase.from("payments").select("*").eq("tenant_id", billingId).eq("payable_type", "subscription_invoice").order("created_at", { ascending: false }),
+    supabase.from("platform_settings").select("support_phone, support_email").maybeSingle(),
   ]);
   const owner = ctx.tenant.owner_id === ctx.userId && !ctx.tenant.parent_id;
   const unpaid = (invoices ?? []).find((i) => i.status === "unpaid");
@@ -73,14 +72,14 @@ export default async function Subscription({ params, searchParams }: { params: P
           {!owner ? <p className="mt-2 text-sm text-slate-500">Seul le propriétaire peut gérer le paiement.</p> : unpaid ? (
             <>
               <p className="mt-1 text-sm">Facture <span className="font-mono">{unpaid.number}</span> — <strong>{money(unpaid.amount_usd, "USD")}</strong> · période du {date(unpaid.period_start)} au {date(unpaid.period_end)}</p>
-              {isConfigured() ? (
-                <form action={paySubscription} className="mt-3 flex flex-wrap items-end gap-2">
-                  <input type="hidden" name="tenant" value={tenantId} /><input type="hidden" name="invoice" value={unpaid.id} />
-                  <div><label className="label">Opérateur</label><select name="method" className="input"><option value="orange_money">Orange Money</option><option value="airtel_money">Airtel Money</option><option value="mpesa">M-Pesa</option></select></div>
-                  <div><label className="label">Numéro</label><input name="phone" type="tel" required placeholder="08X XXX XXXX" className="input" /></div>
-                  <button className="btn-gold">Payer {money(unpaid.amount_usd, "USD")}</button>
-                </form>
-              ) : <p className="mt-3 rounded-lg bg-amber-50 p-3 text-sm text-amber-800">Paiement Mobile Money en ligne non encore configuré sur la plateforme. Paiement en espèces auprès d&apos;OSTAPAUL : l&apos;administrateur enregistre votre règlement et votre abonnement est activé immédiatement.</p>}
+              <div className="mt-3 rounded-xl border border-gold-400 bg-gold-100/50 p-4 text-sm">
+                <div className="font-bold">💵 Paiement en espèces auprès d&apos;OSTAPAUL MANAGER</div>
+                <ol className="mt-2 list-decimal space-y-1 pl-5">
+                  <li>Contactez-nous pour convenir du règlement{support?.support_phone ? <> : <a className="font-semibold text-electric-600" href={`tel:${support.support_phone}`}>{support.support_phone}</a></> : null}{support?.support_email ? <> · <a className="font-semibold text-electric-600" href={`mailto:${support.support_email}`}>{support.support_email}</a></> : null}.</li>
+                  <li>Remettez <strong>{money(unpaid.amount_usd, "USD")}</strong> en indiquant la facture <span className="font-mono font-semibold">{unpaid.number}</span>.</li>
+                  <li>Dès l&apos;enregistrement de votre paiement, votre abonnement est activé pour un mois et le reçu apparaît ci-dessous.</li>
+                </ol>
+              </div>
             </>
           ) : (
             <form action={renew} className="mt-3"><input type="hidden" name="tenant" value={tenantId} /><button className="btn-primary">Générer la facture de {sub?.status === "trialing" || sub?.status === "expired" ? "souscription" : "renouvellement"}</button></form>
