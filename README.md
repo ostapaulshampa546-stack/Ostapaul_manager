@@ -36,7 +36,7 @@ select id, 'Votre nom', email from auth.users where email = 'vous@exemple.com';
 
 ### 2. Tâches planifiées
 
-`pg_cron` est programmé par la migration `0009` si l'extension est disponible. Sinon (ou en complément, pour l'envoi des SMS et la vérification des paiements), appelez `GET /api/cron` avec l'en-tête `Authorization: Bearer $CRON_SECRET` (configuré dans `vercel.json` pour Vercel Cron).
+`pg_cron` est programmé par la migration `0009` si l'extension est disponible. Sinon (ou en complément, pour l'envoi des SMS et la vérification des paiements), appelez `GET /api/cron` avec l'en-tête `Authorization: Bearer $CRON_SECRET` (configuré dans `vercel.json` : une fois par jour à 06 h 13, heure de Kinshasa — limite du plan Vercel Hobby ; la facturation horaire est assurée par pg_cron dans Supabase).
 
 ### 3. Webhook Mobile Money
 
