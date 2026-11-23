@@ -55,9 +55,11 @@ create table public.stock_movements (
   created_at timestamptz not null default now()
 );
 create index on public.stock_movements (tenant_id, product_id, created_at desc);
-select public.apply_tenant_rls('stock_movements', 'stock.write', 'stock');
-drop policy stock_movements_upd on public.stock_movements;
-drop policy stock_movements_del on public.stock_movements;
+-- Mouvements : lecture + insertion uniquement (aucune modification ni suppression : traçabilité)
+alter table public.stock_movements enable row level security;
+create policy stock_movements_sel on public.stock_movements for select using (public.can_read(tenant_id));
+create policy stock_movements_ins on public.stock_movements for insert
+  with check (public.can_write(tenant_id, 'stock.write') and public.tenant_has_feature(tenant_id, 'stock'));
 
 create or replace function public.apply_stock_movement() returns trigger
 language plpgsql security definer set search_path = public as $$

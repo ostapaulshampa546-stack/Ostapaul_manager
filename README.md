@@ -47,7 +47,7 @@ Déclarez `https://<votre-domaine>/api/payments/webhook/pawapay` comme URL de ca
 ```bash
 npm test               # tests unitaires (prévisions, Mobile Money)
 npm run typecheck
-# tests SQL d'intégration (86 vérifications) sur un Postgres 16 local jetable :
+# tests SQL d'intégration (88 vérifications) sur un Postgres 16 local jetable :
 PGHOST=/chemin/socket PGPORT=5432 PGUSER=postgres npm run test:db
 ```
 

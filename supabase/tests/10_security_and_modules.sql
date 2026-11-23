@@ -153,7 +153,7 @@ select tests.put('itemId', (select id::text from public.menu_items where name = 
 set role anon;
 select set_config('request.jwt.claims', '{"role":"anon"}', false);
 select tests.ok(jsonb_array_length(public.public_table_menu(tests.get('tableToken')) -> 'uncategorized') = 2, 'menu public via QR');
-select tests.ok((select count(*) from public.orders) = 0, 'anonyme : aucune lecture directe des commandes');
+select tests.fails('select count(*) from public.orders', 'anonyme : aucune lecture directe des commandes');
 select tests.ok((public.public_place_order(tests.get('tableToken'),
   jsonb_build_array(jsonb_build_object('menu_item_id', tests.get('itemId'), 'quantity', 2)), 'Table client') ->> 'total')::numeric = 4,
   'commande client via QR (prix côté serveur)');
@@ -203,6 +203,14 @@ select tests.ok((select decision from public.class_results(tests.uid('class'), t
 select tests.ok(public.student_report_card((select id from public.students where first_name = 'Grâce'), tests.uid('period')) ->> 'decision' = 'Admis', 'bulletin');
 select public.finalize_deliberation(tests.uid('class'), tests.uid('period'));
 select tests.fails(format($$update public.grades set score = 20 where period_id = %L$$, tests.get('period')), 'notes verrouillées après délibération');
+
+-- appel en classe (deux fois le même jour : mise à jour, pas de doublon)
+select tests.ok(public.record_roll_call(tests.uid('class'), current_date,
+  (select jsonb_agg(jsonb_build_object('student_id', id, 'status', 'absent')) from public.students where class_id = tests.uid('class'))) = 2, 'appel en classe');
+select public.record_roll_call(tests.uid('class'), current_date,
+  (select jsonb_agg(jsonb_build_object('student_id', id, 'status', 'present')) from public.students where class_id = tests.uid('class')));
+select tests.ok((select count(*) from public.attendance where source = 'manual' and status = 'present') = 2
+  and (select count(*) from public.attendance where source = 'manual') = 2, 'appel refait : mis à jour sans doublon');
 
 -- frais scolaires + bourse
 insert into public.scholarships (tenant_id, student_id, kind, value) select tests.uid('tB'), id, 'percent', 50 from public.students where first_name = 'Daniel';

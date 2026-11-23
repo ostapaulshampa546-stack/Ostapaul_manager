@@ -290,7 +290,10 @@ begin
   return v_id;
 end $$;
 
--- Appel manuel (liste de classe) : [{student_id, status}]
+-- Appel manuel (liste de classe) : [{student_id, status}] — un seul appel manuel par élève et par jour (mis à jour si refait)
+create unique index attendance_manual_once on public.attendance (tenant_id, person_type, person_id, attendance_date)
+  where source = 'manual';
+
 create or replace function public.record_roll_call(p_class uuid, p_date date, p_items jsonb)
 returns int language plpgsql security definer set search_path = public as $$
 declare v_tenant uuid; it jsonb; n int := 0;
@@ -299,14 +302,14 @@ begin
   if v_tenant is null or not public.can_write(v_tenant, 'attendance.scan') then
     raise exception 'Permission refusée' using errcode = '42501';
   end if;
-  delete from public.attendance a using public.students s
-   where a.tenant_id = v_tenant and a.source = 'manual' and a.attendance_date = p_date
-     and a.person_type = 'student' and a.person_id = s.id and s.class_id = p_class;
   for it in select * from jsonb_array_elements(p_items) loop
-    if exists (select 1 from public.students where id = (it ->> 'student_id')::uuid and class_id = p_class) then
+    if exists (select 1 from public.students where id = (it ->> 'student_id')::uuid and class_id = p_class)
+       and coalesce(it ->> 'status', 'present') in ('present', 'absent', 'late', 'excused') then
       insert into public.attendance (tenant_id, person_type, person_id, status, attendance_date, scanned_at, source)
       values (v_tenant, 'student', (it ->> 'student_id')::uuid, coalesce(it ->> 'status', 'present'), p_date,
-              (p_date::timestamp + time '08:00') at time zone 'Africa/Kinshasa', 'manual');
+              (p_date::timestamp + time '08:00') at time zone 'Africa/Kinshasa', 'manual')
+      on conflict (tenant_id, person_type, person_id, attendance_date) where source = 'manual'
+      do update set status = excluded.status, recorded_by = auth.uid(), synced_at = now();
       n := n + 1;
     end if;
   end loop;
