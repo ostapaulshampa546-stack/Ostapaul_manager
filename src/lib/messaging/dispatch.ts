@@ -1,13 +1,13 @@
 import "server-only";
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { env } from "@/lib/env";
 
 /**
  * Envoi de la file SMS / WhatsApp via Twilio (si configuré). Sans fournisseur configuré,
  * les messages passent au statut « not_configured » : rien n'est présenté comme envoyé.
  */
 export async function dispatchOutbox(admin: SupabaseClient, limit = 100) {
-  const sid = process.env.TWILIO_ACCOUNT_SID, token = process.env.TWILIO_AUTH_TOKEN;
-  const smsFrom = process.env.TWILIO_SMS_FROM, waFrom = process.env.TWILIO_WHATSAPP_FROM;
+  const { sid, token, smsFrom, waFrom } = env.twilio();
   const { data: queue } = await admin.from("message_outbox").select("*").eq("status", "queued").in("channel", ["sms", "whatsapp"]).order("created_at").limit(limit);
   let sent = 0, failed = 0, skipped = 0;
   for (const m of queue ?? []) {
