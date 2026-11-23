@@ -43,20 +43,24 @@ export async function login(formData: FormData) {
   const ip = await clientIp();
 
   const { data: guard, error: gErr } = await admin.rpc("login_guard", { p_email_hash: emailHash, p_ip: ip });
-  if (gErr) redirect(back("Service de connexion momentanément indisponible. Réessayez plus tard."));
-  if ((guard as Guard).blocked) redirect(back(waitMessage((guard as Guard).retry_after_seconds)));
+  // Migration 0011 pas encore appliquée (fonction absente) : connexion sans blocage plutôt que site inaccessible.
+  const guardMissing = gErr?.code === "PGRST202" || gErr?.code === "42883";
+  if (gErr && !guardMissing) redirect(back("Service de connexion momentanément indisponible. Réessayez plus tard."));
+  if (guardMissing) console.error("login_guard absent : appliquez la migration 20261123000011_login_protection.sql");
+  if (!guardMissing && (guard as Guard).blocked) redirect(back(waitMessage((guard as Guard).retry_after_seconds)));
 
   const supabase = await createClient();
   const { error } = await supabase.auth.signInWithPassword({ email, password });
   if (error) {
     if (error.code === "email_not_confirmed") redirect(back("Confirmez d'abord votre adresse e-mail (lien reçu par e-mail)."));
-    const { data: after } = await admin.rpc("login_record", { p_email_hash: emailHash, p_ip: ip, p_success: false });
+    const { data: after } = guardMissing ? { data: null } : await admin.rpc("login_record", { p_email_hash: emailHash, p_ip: ip, p_success: false });
     const g = after as Guard | null;
+    if (!g) redirect(back("E-mail ou mot de passe incorrect."));
     if (g?.blocked) redirect(back(waitMessage(g.retry_after_seconds)));
     const left = g?.remaining ?? 0;
     redirect(back(`E-mail ou mot de passe incorrect. ${left} tentative${left > 1 ? "s" : ""} restante${left > 1 ? "s" : ""} avant un blocage d'une heure.`));
   }
-  await admin.rpc("login_record", { p_email_hash: emailHash, p_ip: ip, p_success: true });
+  if (!guardMissing) await admin.rpc("login_record", { p_email_hash: emailHash, p_ip: ip, p_success: true });
   redirect(next);
 }
 
