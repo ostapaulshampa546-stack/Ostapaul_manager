@@ -15,12 +15,12 @@ export default function Home() {
   return (
     <main>
       <section className="bg-gradient-to-br from-navy-950 via-navy-900 to-navy-800 text-white">
-        <header className="mx-auto flex max-w-6xl items-center justify-between px-4 py-5">
+        <header className="mx-auto flex max-w-6xl items-center justify-between gap-2 px-4 py-5">
           <Logo dark />
-          <nav className="flex items-center gap-2 text-sm">
-            <Link href="/pricing" className="rounded-lg px-3 py-2 text-white/80 hover:text-white">Tarifs</Link>
+          <nav className="flex items-center gap-1 text-sm sm:gap-2">
+            <Link href="/pricing" className="hidden rounded-lg px-3 py-2 text-white/80 hover:text-white sm:inline">Tarifs</Link>
             <Link href="/login" className="rounded-lg px-3 py-2 text-white/80 hover:text-white">Connexion</Link>
-            <Link href="/signup" className="btn-gold">Essai gratuit 48 h</Link>
+            <Link href="/signup" className="btn-gold whitespace-nowrap px-3">Essai 48 h</Link>
           </nav>
         </header>
         <div className="mx-auto max-w-6xl px-4 pb-20 pt-10 md:pt-16">

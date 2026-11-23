@@ -8,7 +8,7 @@ export function Logo({ dark = false, href = "/" }: { dark?: boolean; href?: stri
         <circle cx="256" cy="256" r="150" fill="none" stroke="#1E6BFF" strokeWidth="44" />
         <path d="M256 106a150 150 0 0 1 150 150" fill="none" stroke="#D4A72C" strokeWidth="44" strokeLinecap="round" />
       </svg>
-      <span className={`text-lg font-extrabold tracking-tight ${dark ? "text-white" : "text-navy-900"}`}>
+      <span className={`whitespace-nowrap text-base font-extrabold sm:text-lg tracking-tight ${dark ? "text-white" : "text-navy-900"}`}>
         OSTAPAUL <span className="text-gold-500">MANAGER</span>
       </span>
     </Link>

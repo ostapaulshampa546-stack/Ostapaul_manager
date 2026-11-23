@@ -20,7 +20,7 @@ const common = (prefix: string): NavItem[] => [
   { group: "Administration", href: `${prefix}/alerts`, label: "Anti-fraude", icon: "🛡️", perm: "audit.read" },
   { group: "Administration", href: `${prefix}/audit`, label: "Historique", icon: "📜", perm: "audit.read" },
   { group: "Administration", href: `${prefix}/automations`, label: "Automatisations", icon: "⚙️", perm: "settings.write", feature: "notifications" },
-  { group: "Administration", href: `${prefix}/messages`, label: "SMS / WhatsApp", icon: "💬", perm: "notifications.send", feature: "notifications" },
+  { group: "Administration", href: `${prefix}/messages`, label: "SMS / WhatsApp", icon: "💬", perm: "notifications.send", feature: "sms_whatsapp" },
   { group: "Administration", href: `${prefix}/subscription`, label: "Abonnement", icon: "⭐" },
   { group: "Administration", href: `${prefix}/settings`, label: "Paramètres", icon: "🔧", perm: "settings.write" },
   { group: "Administration", href: `${prefix}/support`, label: "Assistance", icon: "🛟" },
