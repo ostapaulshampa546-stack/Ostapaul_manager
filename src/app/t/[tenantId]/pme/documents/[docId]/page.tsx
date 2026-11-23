@@ -7,6 +7,7 @@ import { PaymentForm } from "@/components/PaymentForm";
 import { PaymentsList } from "@/components/PaymentsList";
 import { PrintButton } from "@/components/PrintButton";
 import { date, money, num } from "@/lib/format";
+import { decryptForDisplay } from "@/lib/crypto";
 import { addLine, docAction, removeLine } from "../../actions";
 
 const TITLE = { quote: "DEVIS", order: "BON DE COMMANDE", invoice: "FACTURE" } as const;
@@ -22,7 +23,8 @@ export default async function DocPage({ params, searchParams }: { params: Promis
     supabase.from("products").select("id, name, sale_price, qty_on_hand").eq("tenant_id", tenantId).eq("is_active", true).order("name"),
   ]);
   if (!d) notFound();
-  const cust = d.customers as { name: string; address: string | null; phone: string | null; email: string | null; tax_id: string | null } | null;
+  const rawCust = d.customers as { name: string; address: string | null; phone: string | null; email: string | null; tax_id: string | null } | null;
+  const cust = rawCust ? { ...rawCust, address: decryptForDisplay(rawCust.address), tax_id: decryptForDisplay(rawCust.tax_id) } : null;
   const can = ctx.can("sales.write") && ctx.active;
   const editable = can && (d.doc_type !== "invoice" ? !["converted", "cancelled"].includes(d.status) : d.status === "draft");
   const remaining = Number(d.total) - Number(d.paid_amount);

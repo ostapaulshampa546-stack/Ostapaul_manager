@@ -17,7 +17,8 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
         <form action={login} className="space-y-4">
           <input type="hidden" name="next" value={sp.next ?? "/app"} />
           <div><label className="label" htmlFor="email">E-mail</label><input id="email" name="email" type="email" required autoComplete="email" className="input" /></div>
-          <div><label className="label" htmlFor="password">Mot de passe</label><input id="password" name="password" type="password" required autoComplete="current-password" className="input" /></div>
+          <div><label className="label" htmlFor="password">Mot de passe</label><input id="password" name="password" type="password" required maxLength={72} autoComplete="current-password" className="input" /></div>
+          <div className="text-right text-sm"><Link href="/forgot-password" className="text-electric-600">Mot de passe oublié ?</Link></div>
           <button className="btn-primary w-full">Se connecter</button>
         </form>
         <p className="mt-6 text-center text-sm text-slate-500">Pas encore de compte ? <Link href="/signup" className="font-semibold text-electric-600">Essai gratuit</Link></p>

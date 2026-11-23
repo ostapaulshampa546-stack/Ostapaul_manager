@@ -2,6 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { getTenantContext } from "@/lib/context";
 import { getResource } from "@/lib/resources";
+import { decryptForDisplay } from "@/lib/crypto";
 
 function csv(rows: Record<string, unknown>[], columns?: string[]) {
   const cols = columns ?? Array.from(new Set(rows.flatMap((r) => Object.keys(r))));
@@ -41,7 +42,11 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ kind
     if (!res || (res.readPerm && !ctx.can(res.readPerm) && !ctx.can(res.writePerm))) return NextResponse.json({ error: "Export inconnu" }, { status: 404 });
     cols = res.fields.map((f) => f.name);
     const { data } = await supabase.from(res.table).select(cols.join(",")).eq("tenant_id", tenantId).limit(10000);
-    rows = (data ?? []) as unknown as Record<string, unknown>[];
+    const enc = res.fields.filter((f) => f.sensitive).map((f) => f.name);
+    rows = ((data ?? []) as unknown as Record<string, unknown>[]).map((r) => {
+      for (const k of enc) if (r[k] != null) r[k] = decryptForDisplay(r[k]);
+      return r;
+    });
   }
   return new NextResponse(csv(rows, cols), {
     headers: { "Content-Type": "text/csv; charset=utf-8", "Content-Disposition": `attachment; filename="ostapaul-${kind}-${new Date().toISOString().slice(0, 10)}.csv"` },

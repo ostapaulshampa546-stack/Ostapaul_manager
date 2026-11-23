@@ -7,6 +7,7 @@ import { Empty, Flash, Locked, PageHeader, StatusBadge, sp } from "@/components/
 import { date, money, num } from "@/lib/format";
 import { TIER_LABEL, requiredTierFor, FEATURE_LABELS } from "@/lib/plans";
 import { saveResource, deleteResource } from "../actions";
+import { decryptForDisplay } from "@/lib/crypto";
 
 type Row = Record<string, unknown> & { id: string };
 const PAGE = 50;
@@ -93,6 +94,13 @@ export default async function ResourcePage({ params, searchParams }: {
       return rq;
     }),
   ]);
+  const sensitive = res.fields.filter((f) => f.sensitive).map((f) => f.name);
+  const decryptRow = <T extends Record<string, unknown> | null | undefined>(r: T): T => {
+    if (!r || !sensitive.length) return r;
+    const copy: Record<string, unknown> = { ...r };
+    for (const k of sensitive) if (copy[k] != null) copy[k] = decryptForDisplay(copy[k]);
+    return copy as T;
+  };
   const rel: Record<string, Map<string, string>> = {};
   const relOpts: Record<string, { id: string; label: string }[]> = {};
   relFields.forEach((f, i) => {
@@ -104,8 +112,8 @@ export default async function ResourcePage({ params, searchParams }: {
   const editId = sp(q.edit);
   const creating = sp(q.new) === "1";
   const canWrite = ctx.can(res.writePerm) && ctx.active;
-  const editing = editId ? (rows as Row[] | null)?.find((r) => r.id === editId) ??
-    (await supabase.from(res.table).select("*").eq("id", editId).eq("tenant_id", tenantId).maybeSingle()).data as Row | null : null;
+  const editing = decryptRow(editId ? (rows as Row[] | null)?.find((r) => r.id === editId) ??
+    (await supabase.from(res.table).select("*").eq("id", editId).eq("tenant_id", tenantId).maybeSingle()).data as Row | null : null);
   const listFields = res.fields.filter((f) => f.list);
   const base = `/t/${tenantId}/r/${res.key}`;
   const total = count ?? 0;
@@ -133,7 +141,7 @@ export default async function ResourcePage({ params, searchParams }: {
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {res.fields.filter((f) => !(editing && f.name === "qty_on_hand")).map((f) => (
               <div key={f.name} className={f.type === "textarea" ? "sm:col-span-2 lg:col-span-3" : ""}>
-                <label htmlFor={f.name} className="label">{f.label}{f.required && " *"}</label>
+                <label htmlFor={f.name} className="label">{f.label}{f.required && " *"}{f.sensitive && <span title="Donnée chiffrée" className="ml-1 normal-case">🔒</span>}</label>
                 <Input f={f} value={editing?.[f.name]} relOptions={relOpts[f.name]} />
                 {f.hint && <p className="mt-1 text-xs text-slate-400">{f.hint}</p>}
               </div>
@@ -158,7 +166,7 @@ export default async function ResourcePage({ params, searchParams }: {
           <table className="tbl">
             <thead><tr>{listFields.map((f) => <th key={f.name}>{f.label}</th>)}<th className="no-print text-right">Actions</th></tr></thead>
             <tbody>
-              {(rows as Row[]).map((r) => (
+              {(rows as Row[]).map(decryptRow).map((r) => (
                 <tr key={r.id}>
                   {listFields.map((f) => <td key={f.name}>{display(f, r, rel)}</td>)}
                   <td className="no-print whitespace-nowrap text-right">

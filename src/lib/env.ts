@@ -17,6 +17,7 @@ export const env = {
   pawapayUrl: () => secret("PAWAPAY_API_URL") || "https://api.sandbox.pawapay.io",
   pawapayToken: () => secret("PAWAPAY_API_TOKEN"),
   cronSecret: () => secret("CRON_SECRET"),
+  encryptionKey: () => secret("ENCRYPTION_KEY"),
   twilio: () => ({
     sid: secret("TWILIO_ACCOUNT_SID"), token: secret("TWILIO_AUTH_TOKEN"),
     smsFrom: secret("TWILIO_SMS_FROM"), waFrom: secret("TWILIO_WHATSAPP_FROM"),

@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { getResource, type Field } from "@/lib/resources";
 import { failIfError, withParam } from "@/lib/server-actions";
+import { encryptField } from "@/lib/crypto";
 
 function coerce(f: Field, raw: FormDataEntryValue | null): unknown {
   if (f.type === "bool") return raw === "on" || raw === "true";
@@ -45,7 +46,7 @@ export async function saveResource(formData: FormData) {
       const value = coerce(f, formData.get(f.name));
       if (f.required && (value === null || value === "")) throw new Error(`${f.label} est obligatoire`);
       if (f.name === "matricule" && value === null) continue;
-      row[f.name] = value;
+      row[f.name] = f.sensitive && typeof value === "string" ? encryptField(value) : value;
     }
   } catch (e) {
     redirect(withParam(`${back}?${id ? `edit=${id}` : "new=1"}`, "error", (e as Error).message));

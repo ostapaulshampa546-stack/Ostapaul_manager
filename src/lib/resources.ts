@@ -14,6 +14,8 @@ export type Field = {
   defaultValue?: string;
   min?: number;
   max?: number;
+  /** Chiffré en base (AES-256-GCM) : illisible hors de l'application. Non recherchable. */
+  sensitive?: boolean;
 };
 
 export type Resource = {
@@ -59,11 +61,11 @@ export const RESOURCES: Resource[] = [
       { name: "phone", label: "Téléphone", type: "tel", list: true },
       { name: "email", label: "E-mail", type: "email" },
       { name: "birth_date", label: "Date de naissance", type: "date" },
-      { name: "address", label: "Adresse", type: "text" },
+      { name: "address", label: "Adresse", type: "text" , sensitive: true },
       { name: "hire_date", label: "Date d'embauche", type: "date" },
       { name: "salary", label: "Salaire mensuel", type: "money" },
       { name: "salary_currency", label: "Devise du salaire", type: "currency", defaultValue: "USD" },
-      { name: "emergency_contact", label: "Contact d'urgence", type: "text" },
+      { name: "emergency_contact", label: "Contact d'urgence", type: "text" , sensitive: true },
       { name: "is_active", label: "Actif", type: "bool", defaultValue: "true", list: true },
     ],
   },
@@ -87,7 +89,7 @@ export const RESOURCES: Resource[] = [
         { value: "maternite", label: "Maternité" }, { value: "autre", label: "Autre" }] },
       { name: "start_date", label: "Du", type: "date", required: true, list: true },
       { name: "end_date", label: "Au", type: "date", required: true, list: true },
-      { name: "reason", label: "Motif", type: "textarea" },
+      { name: "reason", label: "Motif", type: "textarea" , sensitive: true },
       { name: "status", label: "Statut", type: "select", list: true, defaultValue: "pending", options: [
         { value: "pending", label: "En attente" }, { value: "approved", label: "Approuvé" }, { value: "rejected", label: "Refusé" }] },
     ],
@@ -105,7 +107,7 @@ export const RESOURCES: Resource[] = [
       CURRENCY,
       { name: "status", label: "Statut", type: "select", list: true, defaultValue: "active", options: [
         { value: "active", label: "Actif" }, { value: "ended", label: "Terminé" }, { value: "suspended", label: "Suspendu" }] },
-      { name: "notes", label: "Notes", type: "textarea" },
+      { name: "notes", label: "Notes", type: "textarea" , sensitive: true },
     ],
   },
   {
@@ -147,8 +149,8 @@ export const RESOURCES: Resource[] = [
       { name: "contact_name", label: "Contact", type: "text", list: true },
       { name: "phone", label: "Téléphone", type: "tel", list: true },
       { name: "email", label: "E-mail", type: "email" },
-      { name: "address", label: "Adresse", type: "text" },
-      { name: "notes", label: "Notes", type: "textarea" },
+      { name: "address", label: "Adresse", type: "text" , sensitive: true },
+      { name: "notes", label: "Notes", type: "textarea" , sensitive: true },
     ],
   },
   {
@@ -268,9 +270,9 @@ export const RESOURCES: Resource[] = [
       { name: "first_name", label: "Prénom", type: "text", required: true, list: true },
       GENDER,
       { name: "birth_date", label: "Date de naissance", type: "date" },
-      { name: "birth_place", label: "Lieu de naissance", type: "text" },
+      { name: "birth_place", label: "Lieu de naissance", type: "text" , sensitive: true },
       { name: "class_id", label: "Classe", type: "relation", list: true, relation: { table: "classes", labelColumns: ["name"] } },
-      { name: "address", label: "Adresse", type: "text" },
+      { name: "address", label: "Adresse", type: "text" , sensitive: true },
       { name: "guardian_name", label: "Parent / tuteur", type: "text" },
       { name: "guardian_phone", label: "Téléphone du parent", type: "tel", list: true },
       { name: "guardian_whatsapp", label: "WhatsApp du parent", type: "tel" },
@@ -339,9 +341,9 @@ export const RESOURCES: Resource[] = [
         { value: "company", label: "Entreprise" }, { value: "individual", label: "Particulier" }] },
       { name: "phone", label: "Téléphone", type: "tel", list: true },
       { name: "email", label: "E-mail", type: "email", list: true },
-      { name: "address", label: "Adresse", type: "text" },
-      { name: "tax_id", label: "RCCM / Id. Nat. / NIF", type: "text" },
-      { name: "notes", label: "Notes", type: "textarea" },
+      { name: "address", label: "Adresse", type: "text" , sensitive: true },
+      { name: "tax_id", label: "RCCM / Id. Nat. / NIF", type: "text" , sensitive: true },
+      { name: "notes", label: "Notes", type: "textarea" , sensitive: true },
     ],
   },
 ];

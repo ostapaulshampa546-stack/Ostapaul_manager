@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Logo } from "@/components/Logo";
 import { Flash } from "@/components/ui";
 import { signup } from "../login/actions";
+import { PASSWORD_HINT } from "@/lib/password";
 
 export const metadata = { title: "Créer un compte" };
 
@@ -20,7 +21,9 @@ export default async function SignupPage({ searchParams }: { searchParams: Promi
           <div><label className="label" htmlFor="full_name">Nom complet</label><input id="full_name" name="full_name" required className="input" /></div>
           <div><label className="label" htmlFor="phone">Téléphone</label><input id="phone" name="phone" type="tel" placeholder="+243 …" className="input" /></div>
           <div><label className="label" htmlFor="email">E-mail</label><input id="email" name="email" type="email" required autoComplete="email" className="input" /></div>
-          <div><label className="label" htmlFor="password">Mot de passe (8 caractères min.)</label><input id="password" name="password" type="password" minLength={8} required autoComplete="new-password" className="input" /></div>
+          <div><label className="label" htmlFor="password">Mot de passe</label><input id="password" name="password" type="password" minLength={8} maxLength={72} required autoComplete="new-password" className="input" />
+            <p className="mt-1 text-xs text-slate-500">{PASSWORD_HINT}</p></div>
+          <div><label className="label" htmlFor="password_confirm">Confirmer le mot de passe</label><input id="password_confirm" name="password_confirm" type="password" minLength={8} maxLength={72} required autoComplete="new-password" className="input" /></div>
           <button className="btn-gold w-full">Créer mon compte</button>
         </form>
         <p className="mt-6 text-center text-sm text-slate-500">Déjà inscrit ? <Link href="/login" className="font-semibold text-electric-600">Connexion</Link></p>
