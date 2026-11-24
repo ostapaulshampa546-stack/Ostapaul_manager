@@ -10,7 +10,7 @@ function wrap(text: string, max: number) {
   return lines;
 }
 
-export function PromoDesign({ message: m, layout }: { message: M; layout: number }) {
+export function PromoDesign({ message: m, layout, cta }: { message: M; layout: number; cta: string }) {
   const ref = useRef<SVGSVGElement>(null);
   const title = wrap(m.title, 20), text = wrap(m.text, 38);
   function download(kind: "svg" | "png") {
@@ -44,7 +44,7 @@ export function PromoDesign({ message: m, layout }: { message: M; layout: number
         {title.map((l, i) => <text key={i} x="90" y={460 + i * 92} fontFamily="Arial, Helvetica, sans-serif" fontWeight="800" fontSize="82" fill={fg}>{l}</text>)}
         {text.map((l, i) => <text key={i} x="90" y={480 + title.length * 92 + 40 + i * 52} fontFamily="Arial, Helvetica, sans-serif" fontSize="40" fill={fg} opacity="0.8">{l}</text>)}
         <rect x="90" y="910" width="470" height="90" rx="45" fill="#D4A72C" />
-        <text x="325" y="968" textAnchor="middle" fontFamily="Arial, Helvetica, sans-serif" fontWeight="800" fontSize="36" fill="#050f2a">Essai gratuit 48 h</text>
+        <text x="325" y="968" textAnchor="middle" fontFamily="Arial, Helvetica, sans-serif" fontWeight="800" fontSize="36" fill="#050f2a">{cta}</text>
         <text x="990" y="968" textAnchor="end" fontFamily="Arial, Helvetica, sans-serif" fontSize="30" fill={fg} opacity="0.7">Kinshasa · RDC</text>
       </svg>
       <div className="space-y-2">

@@ -3,17 +3,19 @@ import { Logo } from "@/components/Logo";
 import { Flash } from "@/components/ui";
 import { signup } from "../login/actions";
 import { PASSWORD_HINT } from "@/lib/password";
+import { getPlatformInfo } from "@/lib/site";
 
 export const metadata = { title: "Créer un compte" };
 
 export default async function SignupPage({ searchParams }: { searchParams: Promise<{ error?: string; sector?: string; tier?: string }> }) {
   const sp = await searchParams;
+  const info = await getPlatformInfo();
   return (
     <main className="flex min-h-screen items-center justify-center bg-gradient-to-br from-navy-950 to-navy-800 px-4 py-10">
       <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-xl">
         <Logo />
         <h1 className="mt-6 text-2xl font-bold">Créer votre compte</h1>
-        <p className="mb-6 text-sm text-slate-500">Essai gratuit de 48 heures, sans engagement.</p>
+        <p className="mb-6 text-sm text-slate-500">{info.trialLabel ? `Essai gratuit de ${info.trialLabel}, sans engagement.` : "Sans engagement."}</p>
         <Flash error={sp.error} />
         <form action={signup} className="space-y-4">
           <input type="hidden" name="sector" value={sp.sector ?? ""} />

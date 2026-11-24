@@ -4,7 +4,7 @@ import { Logo } from "@/components/Logo";
 
 const NAV = [
   ["/admin", "📊 Vue globale"], ["/admin/tenants", "🏢 Établissements"], ["/admin/plans", "⭐ Formules & tarifs"],
-  ["/admin/transactions", "💳 Transactions"], ["/admin/tickets", "🛟 Assistance"], ["/admin/promo", "🎨 Design du jour"],
+  ["/admin/transactions", "💳 Transactions"], ["/admin/leads", "📩 Demandes de contact"], ["/admin/tickets", "🛟 Assistance"], ["/admin/promo", "🎨 Design du jour"],
   ["/admin/card", "🪪 Ma carte"], ["/admin/settings", "⚙️ Paramètres"],
 ];
 
