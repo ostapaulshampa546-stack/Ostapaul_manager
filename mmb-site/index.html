@@ -1,0 +1,547 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>html{color-scheme:light}body{margin:0}img{max-width:100%}</style>
+<title>TENDRELAC par MMB</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="TENDRELAC, la bouillie fabriquée par MMB en République démocratique du Congo. Découvrez nos produits, notre production, notre packaging et commandez sur WhatsApp.">
+<meta property="og:title" content="TENDRELAC par MMB">
+<meta property="og:description" content="La bouillie TENDRELAC, fabriquée par MMB à Kinshasa.">
+<meta property="og:type" content="website">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"MMB","brand":{"@type":"Brand","name":"TENDRELAC"},"areaServed":"CD"}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Source+Sans+3:wght@400;600&display=swap">
+<style>
+/* Layout: one long page, sections as the ten "pages"; a 3D product stage opens it, then calm editorial blocks. */
+:root{
+  --bg:#f5f6f0; --surface:#ffffff; --ink:#17251a; --muted:#56635a; --line:#dde2d6;
+  --green:#1f5a2c; --green-soft:#e4ede1; --harvest:#c87a2a; --harvest-soft:#f6e8d6;
+  --warn-bg:#fff4dc; --warn-ink:#6b4a0c;
+  --display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --body:"Source Sans 3", "Segoe UI", system-ui, sans-serif;
+  --r:14px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f1712; --surface:#162119; --ink:#e8efe6; --muted:#a3b1a6; --line:#2a382d;
+  --green:#7cc28a; --green-soft:#1c2e21; --harvest:#e9a35a; --harvest-soft:#2e2316;
+  --warn-bg:#2e2512; --warn-ink:#f1d39a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1712; --surface:#162119; --ink:#e8efe6; --muted:#a3b1a6; --line:#2a382d;
+  --green:#7cc28a; --green-soft:#1c2e21; --harvest:#e9a35a; --harvest-soft:#2e2316;
+  --warn-bg:#2e2512; --warn-ink:#f1d39a; color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.6}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--bg)}
+.wrap{max-width:1160px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--display);line-height:1.08;text-wrap:balance;margin:0}
+h2{font-size:clamp(28px,4vw,42px);letter-spacing:-.01em}
+h3{font-size:20px}
+p{margin:0}
+a{color:var(--green)}
+:focus-visible{outline:3px solid var(--harvest);outline-offset:2px;border-radius:6px}
+
+.proto{background:var(--warn-bg);color:var(--warn-ink);font-size:14px}
+.proto .wrap{padding-block:8px}
+
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+header.top .wrap{display:flex;align-items:center;gap:20px;padding-block:12px}
+.brand{display:flex;align-items:baseline;gap:8px;text-decoration:none;color:var(--ink)}
+.brand b{font-family:var(--display);font-weight:800;font-size:22px;letter-spacing:.02em}
+.brand span{font-size:13px;color:var(--muted)}
+nav.menu{margin-left:auto;display:flex;gap:4px;overflow-x:auto;scrollbar-width:none}
+nav.menu a{color:var(--muted);text-decoration:none;font-size:15px;padding:6px 10px;border-radius:999px;white-space:nowrap}
+nav.menu a:hover{color:var(--ink);background:var(--green-soft)}
+.menu-btn{display:none;margin-left:auto;background:none;border:1px solid var(--line);color:var(--ink);border-radius:999px;padding:6px 14px;font:inherit;font-size:15px;cursor:pointer}
+@media (max-width:860px){
+  .menu-btn{display:block}
+  nav.menu{display:none;position:absolute;left:0;right:0;top:100%;flex-direction:column;background:var(--bg);border-bottom:1px solid var(--line);padding:8px max(16px,env(safe-area-inset-right,0px)) 16px max(16px,env(safe-area-inset-left,0px))}
+  nav.menu.open{display:flex}
+}
+
+/* Hero */
+.hero .wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:32px;align-items:center;padding-block:48px 24px}
+.eyebrow{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--harvest);font-weight:600}
+.hero h1{font-size:clamp(44px,7vw,84px);font-weight:800;letter-spacing:-.025em;margin:12px 0 16px}
+.hero h1 em{font-style:normal;color:var(--green)}
+.lead{font-size:19px;color:var(--muted);max-width:34em}
+.actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 20px;border-radius:999px;font:inherit;font-weight:600;text-decoration:none;cursor:pointer;border:1px solid transparent}
+.btn.primary{background:var(--green);color:var(--bg)}
+.btn.ghost{border-color:var(--line);color:var(--ink);background:var(--surface)}
+.stage{position:relative;height:540px;border-radius:24px;overflow:hidden;background:radial-gradient(120% 90% at 50% 30%,var(--surface) 0%,var(--green-soft) 70%,var(--bg) 100%);border:1px solid var(--line)}
+#scene{position:absolute;inset:0;width:100%;height:100%;touch-action:pan-y;cursor:grab}
+#scene:active{cursor:grabbing}
+.stage-ui{position:absolute;left:12px;right:12px;bottom:12px;display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.chip{font:inherit;font-size:14px;padding:7px 14px;border-radius:999px;border:1px solid var(--line);background:color-mix(in srgb,var(--surface) 90%,transparent);color:var(--ink);cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--green);color:var(--bg);border-color:var(--green)}
+.hint{position:absolute;top:14px;left:0;right:0;text-align:center;font-size:13px;color:var(--muted);pointer-events:none}
+.fallback{position:absolute;inset:0;display:grid;place-items:center;padding:24px}
+.fallback img{max-height:100%;border-radius:16px}
+@media (max-width:860px){.hero .wrap{grid-template-columns:1fr;padding-block:28px 8px}.stage{height:440px}}
+
+section{padding-block:72px}
+section + section{border-top:1px solid var(--line)}
+.sec-head{display:grid;gap:12px;max-width:44em;margin-bottom:36px}
+.sec-head p{color:var(--muted);font-size:18px}
+.todo{display:inline-block;font-size:13px;font-weight:600;color:var(--warn-ink);background:var(--warn-bg);border-radius:6px;padding:1px 8px}
+
+.split{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px}
+.block{display:grid;gap:10px;align-content:start}
+.block p{color:var(--muted)}
+.values{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-top:32px}
+.value{padding:18px;border-radius:var(--r);background:var(--green-soft)}
+.value h3{font-size:17px;margin-bottom:6px}
+.value p{font-size:15px;color:var(--muted)}
+
+.products{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px}
+.product{display:grid;grid-template-columns:120px minmax(0,1fr);gap:20px;padding:20px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r)}
+.product img{width:120px;height:180px;object-fit:cover;border-radius:10px}
+.product dl{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;margin:10px 0 0;font-size:15px}
+.product dt{color:var(--muted)}
+.product dd{margin:0;font-variant-numeric:tabular-nums}
+.formats{margin-top:28px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;color:var(--muted);font-size:15px}
+.formats span.tag{border:1px dashed var(--line);border-radius:999px;padding:4px 12px;color:var(--ink)}
+
+ol.steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;counter-reset:s}
+ol.steps li{counter-increment:s;padding:16px;border-top:3px solid var(--green);background:var(--surface);border-radius:0 0 var(--r) var(--r)}
+ol.steps li::before{content:counter(s);font-family:var(--display);font-weight:800;font-size:28px;color:var(--harvest);display:block;line-height:1}
+ol.steps b{display:block;margin-top:8px}
+ol.steps span{font-size:14px;color:var(--muted)}
+
+.pack{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:32px;align-items:start}
+@media (max-width:760px){.pack{grid-template-columns:1fr}}
+table.mentions{width:100%;border-collapse:collapse;font-size:15px}
+table.mentions th,table.mentions td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+table.mentions th{font-weight:600;width:42%}
+.ok{color:var(--green);font-weight:600}
+.notes{display:grid;gap:12px}
+.note{padding:16px;border-radius:var(--r);background:var(--harvest-soft)}
+.note b{display:block;margin-bottom:4px}
+.note p{font-size:15px;color:var(--muted)}
+
+.commit{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px}
+.commit div{padding-left:16px;border-left:3px solid var(--harvest)}
+.commit p{color:var(--muted);font-size:15px;margin-top:6px}
+
+.gallery{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:16px}
+.gallery figure{margin:0}
+.gallery img{width:100%;border-radius:var(--r);display:block}
+.gallery figcaption{font-size:14px;color:var(--muted);margin-top:8px}
+.slots{display:grid;gap:16px}
+.slot{border:1px dashed var(--line);border-radius:var(--r);display:grid;place-items:center;text-align:center;padding:24px;color:var(--muted);font-size:15px;min-height:140px}
+@media (max-width:700px){.gallery{grid-template-columns:1fr}}
+
+.empty{padding:32px;border:1px dashed var(--line);border-radius:var(--r);color:var(--muted);max-width:44em}
+
+.contact{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:32px}
+@media (max-width:760px){.contact{grid-template-columns:1fr}}
+form{display:grid;gap:14px;padding:24px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:520px){.row2{grid-template-columns:1fr}}
+label{display:grid;gap:6px;font-size:14px;font-weight:600}
+input,select,textarea{font:inherit;font-weight:400;font-size:16px;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink);width:100%}
+textarea{min-height:110px;resize:vertical}
+.form-msg{font-size:15px;padding:10px 12px;border-radius:10px;background:var(--green-soft)}
+
+footer{border-top:1px solid var(--line);padding-block:32px;color:var(--muted);font-size:14px}
+footer .wrap{display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between}
+
+.wa{position:fixed;right:calc(16px + env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:25;display:flex;align-items:center;gap:8px;background:#1f8a4c;color:#fff;border:0;border-radius:999px;padding:12px 18px;font:inherit;font-weight:600;cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,.18)}
+.wa svg{width:22px;height:22px}
+.wa-pop{position:fixed;right:calc(16px + env(safe-area-inset-right,0px));bottom:calc(76px + env(safe-area-inset-bottom,0px));z-index:25;max-width:300px;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:var(--r);padding:16px;font-size:15px;box-shadow:0 8px 28px rgba(0,0,0,.15)}
+</style>
+</head>
+<body>
+
+<div class="proto" role="note"><div class="wrap"><b>Prototype.</b> Les mentions marquées « à fournir » attendent les données réelles de MMB. Rien n'est publié ni certifié à ce stade.</div></div>
+
+<header class="top">
+  <div class="wrap" style="position:relative">
+    <a class="brand" href="#accueil"><b>TENDRELAC</b><span>par MMB</span></a>
+    <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="menu">Menu</button>
+    <nav class="menu" id="menu" aria-label="Navigation principale">
+      <a href="#a-propos">À propos</a>
+      <a href="#tendrelac">TENDRELAC</a>
+      <a href="#produits">Produits</a>
+      <a href="#production">Production</a>
+      <a href="#packaging">Packaging</a>
+      <a href="#qualite">Qualité</a>
+      <a href="#galerie">Galerie</a>
+      <a href="#actualites">Actualités</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<section class="hero" id="accueil" style="padding-block:0">
+  <div class="wrap">
+    <div>
+      <div class="eyebrow">Bouillie fabriquée en RDC</div>
+      <h1>La bouillie <em>TENDRELAC</em></h1>
+      <p class="lead">Une bouillie préparée par MMB, pour enfants et adultes. Faites tourner le sachet pour découvrir les deux variantes, faces avant et arrière.</p>
+      <div class="actions">
+        <a class="btn primary" href="#produits">Voir les produits</a>
+        <a class="btn ghost" href="#contact">Commander</a>
+      </div>
+    </div>
+    <div class="stage" id="stage">
+      <canvas id="scene" aria-label="Sachets TENDRELAC en 3D. Glissez pour les faire tourner."></canvas>
+      <div class="hint" id="hint">Glissez pour faire tourner</div>
+      <div class="stage-ui" role="group" aria-label="Vue du produit">
+        <button class="chip" data-view="duo" aria-pressed="true">Les deux</button>
+        <button class="chip" data-view="green" aria-pressed="false">Sachet vert</button>
+        <button class="chip" data-view="orange" aria-pressed="false">Sachet orange</button>
+        <button class="chip" data-view="back" aria-pressed="false">Face arrière</button>
+      </div>
+      <div class="fallback" id="fallback" hidden><img src="photo.jpg" alt="Deux sachets TENDRELAC 1 kg, vert et orange"></div>
+    </div>
+  </div>
+</section>
+
+<section id="a-propos">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">À propos de MMB</div>
+      <h2>Une entreprise agroalimentaire congolaise qui se structure</h2>
+      <p>MMB fabrique et commercialise la bouillie TENDRELAC. Notre ambition : devenir la bouillie de référence des familles congolaises, reconnue pour sa qualité constante et sa sécurité.</p>
+    </div>
+    <div class="split">
+      <div class="block"><h3>Notre mission</h3><p>Produire en RDC, à partir de matières premières contrôlées, une bouillie nutritive, sûre et accessible, et la rendre disponible partout où les familles font leurs achats.</p></div>
+      <div class="block"><h3>Qui nous sommes</h3><p>Fondateurs, date de création, effectif et adresse du site de production. <span class="todo">à fournir</span></p></div>
+    </div>
+    <div class="values">
+      <div class="value"><h3>Sécurité d'abord</h3><p>Aucun lot ne sort sans contrôle.</p></div>
+      <div class="value"><h3>Transparence</h3><p>L'emballage dit exactement ce que contient le produit.</p></div>
+      <div class="value"><h3>Constance</h3><p>Le même goût et la même qualité à chaque sachet.</p></div>
+      <div class="value"><h3>Accessibilité</h3><p>Des formats et des prix adaptés aux revenus réels.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="tendrelac">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">Présentation</div>
+      <h2>TENDRELAC, pour enfants et adultes</h2>
+      <p>Une bouillie à base de céréales et de légumineuses, présentée en sachet refermable de 1 kg. La composition exacte, les valeurs nutritionnelles et le mode de préparation seront publiés après validation en laboratoire.</p>
+    </div>
+    <div class="split">
+      <div class="block"><h3>Composition</h3><p>Liste des ingrédients et proportions. <span class="todo">à fournir</span></p></div>
+      <div class="block"><h3>Préparation</h3><p>Quantité de poudre, volume d'eau, temps de cuisson. <span class="todo">à fournir</span></p></div>
+      <div class="block"><h3>Allergènes</h3><p>À déclarer selon la recette réelle (par exemple blé, arachide, soja, lait). <span class="todo">à confirmer</span></p></div>
+    </div>
+  </div>
+</section>
+
+<section id="produits">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">Nos produits</div>
+      <h2>Deux variantes, un même sachet de 1 kg</h2>
+    </div>
+    <div class="products">
+      <article class="product">
+        <img src="green.jpg" alt="Sachet TENDRELAC vert, 1 kg">
+        <div><h3>TENDRELAC, sachet vert</h3>
+          <dl><dt>Poids net</dt><dd>1 kg</dd><dt>Âge</dt><dd>dès 6 mois (mention du sachet)</dd><dt>Recette</dt><dd><span class="todo">à fournir</span></dd><dt>Prix</dt><dd>sur demande</dd></dl>
+        </div>
+      </article>
+      <article class="product">
+        <img src="orange.jpg" alt="Sachet TENDRELAC orange, 1 kg">
+        <div><h3>TENDRELAC, sachet orange</h3>
+          <dl><dt>Poids net</dt><dd>1 kg</dd><dt>Âge</dt><dd>dès 6 mois (mention du sachet)</dd><dt>Recette</dt><dd><span class="todo">à fournir</span></dd><dt>Prix</dt><dd>sur demande</dd></dl>
+        </div>
+      </article>
+    </div>
+    <div class="formats">Formats à l'étude : <span class="tag">Sachet individuel</span><span class="tag">Sachet économique</span><span class="tag">Sachet familial</span><span class="tag">Format supermarché</span></div>
+  </div>
+</section>
+
+<section id="production">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">Notre production</div>
+      <h2>Du grain au sachet, chaque étape tracée</h2>
+      <p>Les étapes ci-dessous forment la structure de notre procédé. Les paramètres précis seront publiés une fois le procédé réel documenté. <span class="todo">à confirmer</span></p>
+    </div>
+    <ol class="steps">
+      <li><b>Réception</b><span>Contrôle de chaque lot de matière première</span></li>
+      <li><b>Préparation</b><span>Tri et nettoyage des grains</span></li>
+      <li><b>Transformation</b><span>Selon le procédé MMB</span></li>
+      <li><b>Mélange</b><span>Selon la recette validée</span></li>
+      <li><b>Conditionnement</b><span>Ensachage, numéro de lot et date</span></li>
+      <li><b>Libération</b><span>Contrôle du produit fini avant expédition</span></li>
+    </ol>
+  </div>
+</section>
+
+<section id="packaging">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">Notre packaging</div>
+      <h2>Un sachet refermable, des mentions complètes</h2>
+      <p>Voici l'état des mentions obligatoires sur le sachet actuel. Utilisez « Face arrière » dans la vue 3D pour voir la maquette de dos à compléter.</p>
+    </div>
+    <div class="pack">
+      <table class="mentions">
+        <tbody>
+          <tr><th>Nom du produit et marque</th><td class="ok">Présent</td></tr>
+          <tr><th>Poids net</th><td class="ok">Présent (1 kg)</td></tr>
+          <tr><th>Liste des ingrédients</th><td><span class="todo">à fournir</span></td></tr>
+          <tr><th>Valeurs nutritionnelles</th><td><span class="todo">analyse labo</span></td></tr>
+          <tr><th>Mode de préparation</th><td><span class="todo">à fournir</span></td></tr>
+          <tr><th>Conservation</th><td><span class="todo">à fournir</span></td></tr>
+          <tr><th>Fabricant et adresse</th><td><span class="todo">à fournir</span></td></tr>
+          <tr><th>Numéro de lot, date limite</th><td><span class="todo">à prévoir à l'impression</span></td></tr>
+        </tbody>
+      </table>
+      <div class="notes">
+        <div class="note"><b>Textes illisibles sur la face avant</b><p>Les lignes sous « Pour enfants et adultes » et au-dessus du logo ne forment pas des mots. Elles doivent être réécrites avant toute impression.</p></div>
+        <div class="note"><b>Mention « 6 mois »</b><p>Un produit annoncé dès 6 mois relève des règles applicables aux aliments pour jeunes enfants. Elle sera vérifiée avec la réglementation avant impression.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="qualite">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">Qualité et sécurité alimentaire</div>
+      <h2>Nos engagements qualité</h2>
+      <p>TENDRELAC ne revendique aucune certification à ce jour. Voici les engagements sur lesquels MMB construit son système qualité.</p>
+    </div>
+    <div class="commit">
+      <div><h3>Hygiène</h3><p>Bonnes pratiques d'hygiène et de fabrication, appliquées par tout le personnel.</p></div>
+      <div><h3>Analyse des dangers</h3><p>Une démarche HACCP pour identifier et maîtriser les risques à chaque étape.</p></div>
+      <div><h3>Traçabilité</h3><p>Chaque sachet porte un numéro de lot qui permet de remonter aux matières premières.</p></div>
+      <div><h3>Contrôles</h3><p>Analyses des matières premières et du produit fini, dont les mycotoxines.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="galerie">
+  <div class="wrap">
+    <div class="sec-head"><div class="eyebrow">Galerie</div><h2>TENDRELAC en images</h2></div>
+    <div class="gallery">
+      <figure><img src="photo.jpg" alt="Deux sachets TENDRELAC 1 kg, vert et orange, sur une table en bois"><figcaption>Maquette des sachets 1 kg, variantes verte et orange.</figcaption></figure>
+      <div class="slots">
+        <div class="slot">Photo de l'atelier de production<br><span class="todo">à fournir</span></div>
+        <div class="slot">Photo de la bouillie préparée<br><span class="todo">à fournir</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="actualites">
+  <div class="wrap">
+    <div class="sec-head"><div class="eyebrow">Actualités</div><h2>Actualités</h2></div>
+    <div class="empty">Aucune actualité publiée. Les lancements, points de vente et événements de MMB apparaîtront ici.</div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="wrap">
+    <div class="sec-head"><div class="eyebrow">Contact et commandes</div><h2>Commander TENDRELAC</h2><p>Particuliers, boutiques, grossistes et supermarchés : dites-nous ce dont vous avez besoin.</p></div>
+    <div class="contact">
+      <form id="orderForm" novalidate>
+        <div class="row2">
+          <label for="f-name">Nom<input id="f-name" name="name" required autocomplete="name"></label>
+          <label for="f-phone">Téléphone<input id="f-phone" name="phone" type="tel" required autocomplete="tel" placeholder="+243 …"></label>
+        </div>
+        <div class="row2">
+          <label for="f-type">Vous êtes<select id="f-type" name="type"><option>Particulier</option><option>Boutique</option><option>Grossiste</option><option>Supermarché</option><option>Distributeur</option></select></label>
+          <label for="f-city">Ville<input id="f-city" name="city" value="Kinshasa"></label>
+        </div>
+        <label for="f-msg">Votre demande<textarea id="f-msg" name="msg" placeholder="Variante, nombre de sachets, adresse de livraison…"></textarea></label>
+        <button class="btn primary" type="submit" style="justify-self:start">Envoyer la demande</button>
+        <div class="form-msg" id="formMsg" role="status" hidden></div>
+      </form>
+      <div class="block">
+        <h3>Nous joindre</h3>
+        <p>Téléphone et WhatsApp : <span class="todo">à fournir</span></p>
+        <p>Adresse : <span class="todo">à fournir</span>, Kinshasa</p>
+        <p>Horaires : <span class="todo">à fournir</span></p>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer><div class="wrap"><span>© MMB, TENDRELAC. République démocratique du Congo.</span><span>Prototype de site, version de travail.</span></div></footer>
+
+<button class="wa" id="waBtn" aria-expanded="false" aria-controls="waPop">
+  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 0 0 1.8-1.3 2.2 2.2 0 0 0 .2-1.3c-.1-.1-.3-.2-.5-.3z"/></svg>
+  WhatsApp
+</button>
+<div class="wa-pop" id="waPop" hidden>Le numéro WhatsApp Business de MMB n'est pas encore renseigné. Dès qu'il le sera, ce bouton ouvrira directement la conversation.</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+// ---- Réglages à compléter par MMB ----
+const WHATSAPP_NUMBER = ""; // format international sans +, ex. 243XXXXXXXXX
+
+// Menu mobile
+const menuBtn = document.getElementById('menuBtn'), menu = document.getElementById('menu');
+menuBtn.addEventListener('click', () => { const o = menu.classList.toggle('open'); menuBtn.setAttribute('aria-expanded', o); });
+menu.addEventListener('click', e => { if (e.target.tagName === 'A') { menu.classList.remove('open'); menuBtn.setAttribute('aria-expanded', false); } });
+
+// WhatsApp
+const waBtn = document.getElementById('waBtn'), waPop = document.getElementById('waPop');
+if (WHATSAPP_NUMBER) {
+  const a = document.createElement('a'); a.className = 'wa'; a.href = 'https://wa.me/' + WHATSAPP_NUMBER; a.target = '_blank'; a.rel = 'noopener'; a.innerHTML = waBtn.innerHTML; waBtn.replaceWith(a);
+} else {
+  waBtn.addEventListener('click', () => { waPop.hidden = !waPop.hidden; waBtn.setAttribute('aria-expanded', !waPop.hidden); });
+}
+
+// Formulaire
+document.getElementById('orderForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const f = e.target, msg = document.getElementById('formMsg');
+  const missing = [...f.querySelectorAll('[required]')].filter(i => !i.value.trim());
+  msg.hidden = false;
+  if (missing.length) { msg.textContent = 'Indiquez votre nom et votre téléphone pour que nous puissions vous rappeler.'; missing[0].focus(); return; }
+  msg.textContent = "Prototype : le formulaire est prêt, mais l'envoi des demandes sera branché à la mise en ligne. Votre demande n'a pas été transmise.";
+});
+
+// ---- Scène 3D ----
+(function () {
+  const canvas = document.getElementById('scene'), stage = document.getElementById('stage');
+  const fallback = () => { document.getElementById('fallback').hidden = false; canvas.hidden = true; document.getElementById('hint').hidden = true; stage.querySelector('.stage-ui').hidden = true; };
+  if (!window.THREE) { fallback(); return; }
+  let renderer;
+  try { renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true }); }
+  catch (err) { fallback(); return; }
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  renderer.outputEncoding = THREE.sRGBEncoding;
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(32, 1, 0.1, 50);
+  camera.position.set(0, 0.25, 6.2);
+
+  scene.add(new THREE.AmbientLight(0xffffff, 0.78));
+  const key = new THREE.DirectionalLight(0xffffff, 0.55); key.position.set(2.5, 3, 4); scene.add(key);
+  const rim = new THREE.DirectionalLight(0xfff1dc, 0.35); rim.position.set(-3, 1, -2); scene.add(rim);
+
+  const loader = new THREE.TextureLoader();
+  const tex = src => { const t = loader.load(src); t.encoding = THREE.sRGBEncoding; t.anisotropy = 4; return t; };
+
+  // Maquette de dos : mentions à compléter, sans aucune donnée inventée.
+  function backTexture(accent) {
+    const c = document.createElement('canvas'); c.width = 512; c.height = 800; const g = c.getContext('2d');
+    g.fillStyle = '#fbfaf6'; g.fillRect(0, 0, 512, 800);
+    g.fillStyle = accent; g.fillRect(0, 0, 512, 150);
+    g.fillStyle = '#ffffff'; g.font = '700 46px "Bricolage Grotesque", sans-serif'; g.fillText('TENDRELAC', 36, 104);
+    g.fillStyle = '#1b2a1e'; g.font = '700 24px "Source Sans 3", sans-serif';
+    let y = 198;
+    const lineH = 30;
+    const section = (title, body) => {
+      g.fillStyle = '#1b2a1e'; g.font = '700 22px "Source Sans 3", sans-serif'; g.fillText(title, 36, y); y += 28;
+      g.fillStyle = '#8a6a1c'; g.font = 'italic 20px "Source Sans 3", sans-serif'; g.fillText(body, 36, y); y += lineH + 8;
+    };
+    section('Ingrédients', 'à fournir par MMB');
+    g.fillStyle = '#1b2a1e'; g.font = '700 22px "Source Sans 3", sans-serif'; g.fillText('Valeurs nutritionnelles pour 100 g', 36, y); y += 12;
+    const rows = ['Énergie (kcal)', 'Protéines (g)', 'Glucides (g)', 'Lipides (g)', 'Fibres (g)'];
+    g.strokeStyle = '#c9cfc3'; g.lineWidth = 2;
+    rows.forEach(r => { y += 30; g.fillStyle = '#33443a'; g.font = '20px "Source Sans 3", sans-serif'; g.fillText(r, 44, y); g.fillStyle = '#8a6a1c'; g.fillText('analyse labo', 330, y); g.beginPath(); g.moveTo(36, y + 9); g.lineTo(476, y + 9); g.stroke(); });
+    y += 52;
+    section('Préparation', 'à fournir par MMB');
+    section('Conservation', 'à fournir par MMB');
+    section('Fabriqué par MMB', 'adresse à fournir, Kinshasa, RDC');
+    g.fillStyle = '#1b2a1e'; g.font = '700 20px "Source Sans 3", sans-serif';
+    g.fillText('Lot : ________    À consommer avant : ________', 36, 726);
+    g.fillText('Poids net : 1 kg', 36, 760);
+    for (let i = 0; i < 34; i++) { g.fillStyle = '#1b2a1e'; g.fillRect(372 + i * 3.4, 682, (i % 3 === 0) ? 2.4 : 1.2, 52); }
+    const t = new THREE.CanvasTexture(c); t.encoding = THREE.sRGBEncoding; t.anisotropy = 4; return t;
+  }
+
+  // Sachet tenant debout : un « coussin » bombé, face avant photo, face arrière maquette.
+  function pouch(frontTex, backTex, w, h) {
+    const geo = new THREE.PlaneGeometry(w, h, 40, 60), p = geo.attributes.position;
+    for (let i = 0; i < p.count; i++) {
+      const u = p.getX(i) / w + 0.5, v = p.getY(i) / h + 0.5;
+      const sx = Math.pow(Math.max(0, Math.sin(Math.PI * u)), 0.45);
+      const seal = v > 0.9 ? Math.max(0, (0.975 - v) / 0.075) : 1;
+      const sy = Math.pow(Math.max(0, Math.sin(Math.PI * Math.min(v / 0.975, 1))), 0.35) * seal;
+      const depth = 0.12 + 0.12 * (1 - v);
+      p.setZ(i, depth * sx * sy);
+    }
+    geo.computeVertexNormals();
+    const grp = new THREE.Group();
+    const mat = map => new THREE.MeshStandardMaterial({ map, roughness: 0.42, metalness: 0.02 });
+    grp.add(new THREE.Mesh(geo, mat(frontTex)));
+    const back = new THREE.Mesh(geo, mat(backTex)); back.rotation.y = Math.PI; grp.add(back);
+    return grp;
+  }
+
+  // Ombre douce au sol
+  const sc = document.createElement('canvas'); sc.width = sc.height = 128; const sg = sc.getContext('2d');
+  const grad = sg.createRadialGradient(64, 64, 4, 64, 64, 64); grad.addColorStop(0, 'rgba(0,0,0,.32)'); grad.addColorStop(1, 'rgba(0,0,0,0)');
+  sg.fillStyle = grad; sg.fillRect(0, 0, 128, 128);
+  const shadowTex = new THREE.CanvasTexture(sc);
+  const shadow = (w) => { const m = new THREE.Mesh(new THREE.PlaneGeometry(w * 1.5, 0.7), new THREE.MeshBasicMaterial({ map: shadowTex, transparent: true, depthWrite: false })); m.rotation.x = -Math.PI / 2; m.position.y = -1.02; return m; };
+
+  const H = 2.0;
+  const green = pouch(tex('green.jpg'), backTexture('#1f5a2c'), H * 0.656, H);
+  const orange = pouch(tex('orange.jpg'), backTexture('#c87a2a'), H * 0.56, H * 0.98);
+  green.add(shadow(1.3)); orange.add(shadow(1.1));
+  const root = new THREE.Group(); root.add(green, orange); scene.add(root);
+
+  // Grains flottants (décor)
+  const grains = new THREE.Group(); scene.add(grains);
+  const gGeo = new THREE.SphereGeometry(0.035, 10, 8);
+  const gMats = [0xd9a45a, 0xe8c98b, 0xb8743a].map(c => new THREE.MeshStandardMaterial({ color: c, roughness: 0.6 }));
+  for (let i = 0; i < 46; i++) {
+    const m = new THREE.Mesh(gGeo, gMats[i % 3]);
+    const a = Math.random() * Math.PI * 2, r = 1.7 + Math.random() * 1.1;
+    m.position.set(Math.cos(a) * r, -0.9 + Math.random() * 2.2, Math.sin(a) * r * 0.6 - 0.4);
+    m.scale.set(1, 0.7 + Math.random() * 0.5, 1); m.userData = { a, r, s: 0.1 + Math.random() * 0.25, y0: m.position.y, ph: Math.random() * 6 };
+    grains.add(m);
+  }
+
+  // Vues
+  const views = {
+    duo:    { g: [-0.62, 0, 0.25, -0.18], o: [0.68, 0, -0.35, 0.22], rot: 0 },
+    green:  { g: [0, 0, 0.6, 0], o: [2.6, 0, -1.6, 0.4], rot: 0 },
+    orange: { g: [-2.6, 0, -1.6, -0.4], o: [0, 0, 0.6, 0], rot: 0 },
+    back:   { g: [-0.62, 0, 0.25, -0.18], o: [0.68, 0, -0.35, 0.22], rot: Math.PI }
+  };
+  let target = views.duo, spin = 0, spinTarget = 0, dragging = false, lastX = 0, userTouched = false;
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const place = (o, t, k) => { o.position.x += (t[0] - o.position.x) * k; o.position.y += (t[1] - o.position.y) * k; o.position.z += (t[2] - o.position.z) * k; o.rotation.y += (t[3] - o.rotation.y) * k; };
+
+  document.querySelectorAll('.chip').forEach(b => b.addEventListener('click', () => {
+    document.querySelectorAll('.chip').forEach(x => x.setAttribute('aria-pressed', x === b));
+    target = views[b.dataset.view];
+    spinTarget = Math.round(spinTarget / (Math.PI * 2)) * Math.PI * 2 + target.rot;
+  }));
+
+  canvas.addEventListener('pointerdown', e => { dragging = true; lastX = e.clientX; userTouched = true; document.getElementById('hint').hidden = true; canvas.setPointerCapture(e.pointerId); });
+  canvas.addEventListener('pointermove', e => { if (!dragging) return; spinTarget += (e.clientX - lastX) * 0.01; lastX = e.clientX; });
+  ['pointerup', 'pointercancel'].forEach(ev => canvas.addEventListener(ev, () => { dragging = false; }));
+
+  function resize() { const w = stage.clientWidth, h = stage.clientHeight; renderer.setSize(w, h, false); camera.aspect = w / h; camera.position.z = w < 520 ? 7.4 : 6.2; camera.updateProjectionMatrix(); }
+  new ResizeObserver(resize).observe(stage); resize();
+
+  const clock = new THREE.Clock();
+  (function loop() {
+    const t = clock.getElapsedTime();
+    spin += (spinTarget - spin) * 0.08;
+    root.rotation.y = spin + (reduce || userTouched ? 0 : Math.sin(t * 0.5) * 0.28);
+    root.position.y = reduce ? 0 : Math.sin(t * 0.9) * 0.04;
+    place(green, target.g, 0.08); place(orange, target.o, 0.08);
+    if (!reduce) grains.children.forEach(m => { const d = m.userData; m.position.y = d.y0 + Math.sin(t * d.s * 4 + d.ph) * 0.08; m.rotation.x = t * d.s; m.rotation.z = t * d.s * 0.7; });
+    grains.rotation.y = reduce ? 0 : t * 0.04;
+    camera.lookAt(0, 0, 0);
+    renderer.render(scene, camera);
+    requestAnimationFrame(loop);
+  })();
+})();
+</script>
+
+</body>
+</html>
