@@ -3,6 +3,8 @@ import type { SectorPage } from "@/lib/site-content";
 import { getPlatformInfo } from "@/lib/site";
 import { SiteHeader } from "./SiteHeader";
 import { SiteFooter } from "./SiteFooter";
+import { Hero3D } from "./Hero3D";
+import { Tilt } from "./Tilt";
 
 export async function SectorLanding({ page }: { page: SectorPage }) {
   const info = await getPlatformInfo();
@@ -11,7 +13,8 @@ export async function SectorLanding({ page }: { page: SectorPage }) {
     <main>
       <section className="bg-gradient-to-br from-navy-950 via-navy-900 to-navy-800 text-white">
         <SiteHeader />
-        <div className="mx-auto max-w-6xl px-4 pb-16 pt-8 md:pt-14">
+        <div className="mx-auto grid max-w-6xl items-center gap-4 px-4 pb-16 pt-6 md:pt-10 lg:grid-cols-5">
+          <div className="lg:col-span-3">
           <p className="text-sm font-semibold uppercase tracking-[0.2em]" style={{ color: page.accent }}>{page.icon} {page.name}</p>
           <h1 className="mt-4 max-w-3xl text-4xl font-extrabold leading-tight md:text-5xl">{page.headline}</h1>
           <p className="mt-5 max-w-2xl text-lg text-white/75">{page.intro}</p>
@@ -22,6 +25,8 @@ export async function SectorLanding({ page }: { page: SectorPage }) {
               Tarifs{price !== undefined && Number.isFinite(price) ? ` — dès ${price} $ / mois` : ""}
             </Link>
           </div>
+          </div>
+          <Hero3D focus={page.sector} className="h-[280px] sm:h-[360px] lg:col-span-2 lg:h-[460px]" />
         </div>
       </section>
 
@@ -39,12 +44,12 @@ export async function SectorLanding({ page }: { page: SectorPage }) {
           <h2 className="text-2xl font-bold">Tout ce dont vous avez besoin</h2>
           <div className="mt-6 grid gap-4 md:grid-cols-2">
             {page.groups.map((g) => (
-              <div key={g.title} className="rounded-2xl border border-slate-200 p-6">
+              <Tilt key={g.title}><div className="h-full rounded-2xl border border-slate-200 bg-white p-6 hover:shadow-xl">
                 <div className="flex items-center gap-2 text-lg font-bold"><span aria-hidden>{g.icon}</span>{g.title}</div>
                 <ul className="mt-3 space-y-2 text-sm text-slate-700">
                   {g.items.map((i) => <li key={i} className="flex gap-2"><span aria-hidden className="font-bold text-emerald-600">✓</span>{i}</li>)}
                 </ul>
-              </div>
+              </div></Tilt>
             ))}
           </div>
         </div>

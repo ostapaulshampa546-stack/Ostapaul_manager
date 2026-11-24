@@ -4,6 +4,8 @@ import { SiteFooter } from "@/components/site/SiteFooter";
 import { CtaBand } from "@/components/site/SectorLanding";
 import { SECTOR_PAGES, FAQ } from "@/lib/site-content";
 import { getPlatformInfo } from "@/lib/site";
+import { Hero3D } from "@/components/site/Hero3D";
+import { Tilt } from "@/components/site/Tilt";
 
 const HIGHLIGHTS = [
   { icon: "🪪", t: "QR codes partout", d: "Cartes QR générées pour chaque élève, enseignant et employé ; QR sur chaque table de restaurant ; reçus vérifiables par QR." },
@@ -20,31 +22,34 @@ export default async function Home() {
     <main>
       <section className="bg-gradient-to-br from-navy-950 via-navy-900 to-navy-800 text-white">
         <SiteHeader />
-        <div className="mx-auto max-w-6xl px-4 pb-24 pt-10 md:pt-16">
-          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-gold-400">Conçu pour la RDC · prêt pour l&apos;Afrique</p>
-          <h1 className="mt-4 max-w-3xl text-4xl font-extrabold leading-tight md:text-6xl">
-            Un seul logiciel. Trois secteurs. <span className="text-electric-500">Une gestion intelligente.</span>
-          </h1>
-          <p className="mt-6 max-w-2xl text-lg text-white/75">
-            OSTAPAUL MANAGER gère vos restaurants, écoles, instituts supérieurs, universités et PME : ventes, frais scolaires, présences,
-            stocks, personnel et finances — sur ordinateur, tablette et smartphone.
-          </p>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <Link href="/signup" className="btn-gold px-6 py-3 text-base">Commencer gratuitement{info.trialLabel ? ` — ${info.trialLabel}` : ""}</Link>
-            <Link href="/contact" className="btn border border-white/30 px-6 py-3 text-base text-white hover:bg-white/10">Demander une démonstration</Link>
+        <div className="mx-auto grid max-w-6xl items-center gap-4 px-4 pb-24 pt-6 md:pt-10 lg:grid-cols-2">
+          <div>
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-gold-400">Conçu pour la RDC · prêt pour l&apos;Afrique</p>
+            <h1 className="mt-4 text-4xl font-extrabold leading-tight md:text-6xl">
+              Un seul logiciel. Trois secteurs. <span className="text-electric-500">Une gestion intelligente.</span>
+            </h1>
+            <p className="mt-6 max-w-2xl text-lg text-white/75">
+              OSTAPAUL MANAGER gère vos restaurants, écoles, instituts supérieurs, universités et PME : ventes, frais scolaires, présences,
+              stocks, personnel et finances — sur ordinateur, tablette et smartphone.
+            </p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Link href="/signup" className="btn-gold px-6 py-3 text-base">Commencer gratuitement{info.trialLabel ? ` — ${info.trialLabel}` : ""}</Link>
+              <Link href="/contact" className="btn border border-white/30 px-6 py-3 text-base text-white hover:bg-white/10">Demander une démonstration</Link>
+            </div>
           </div>
+          <Hero3D className="h-[320px] sm:h-[420px] lg:h-[520px]" />
         </div>
       </section>
 
       <section className="mx-auto -mt-12 grid max-w-6xl gap-4 px-4 md:grid-cols-3">
         {SECTOR_PAGES.map((s) => (
-          <Link key={s.slug} href={`/${s.slug}`} className="card group border-t-4 transition hover:-translate-y-0.5 hover:shadow-md" style={{ borderTopColor: s.accent }}>
+          <Tilt key={s.slug}><Link href={`/${s.slug}`} className="card group block h-full border-t-4 transition hover:shadow-xl" style={{ borderTopColor: s.accent }}>
             <div className="text-3xl" aria-hidden>{s.icon}</div>
             <h2 className="mt-3 text-xl font-bold">{s.name}</h2>
             <p className="mt-1 text-sm text-slate-600">{s.headline}</p>
             {Number.isFinite(info.minPrice[s.sector]) && <p className="mt-3 text-sm font-semibold text-navy-900">Dès {info.minPrice[s.sector]} $ / mois</p>}
             <span className="mt-3 inline-block text-sm font-semibold text-electric-600 group-hover:underline">Découvrir →</span>
-          </Link>
+          </Link></Tilt>
         ))}
       </section>
 
