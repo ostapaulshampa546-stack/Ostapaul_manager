@@ -74,7 +74,7 @@ export default async function Users({ params, searchParams }: { params: Promise<
               const prof = profMap.get(m.user_id) as { full_name: string | null; phone: string | null } | undefined;
               return (
                 <tr key={m.id}>
-                  <td className="font-medium">{prof?.full_name ?? "—"}<div className="text-xs text-slate-400">{prof?.phone}</div></td>
+                  <td className="font-medium">{prof?.full_name ?? "—"}{m.support_access && <span className="badge ml-1 bg-gold-100 text-navy-900">Assistance OSTAPAUL</span>}<div className="text-xs text-slate-400">{prof?.phone}</div></td>
                   {m.role === "owner" ? <><td>{ROLE_LABELS.owner}</td><td>✓</td><td>{date(m.created_at)}</td><td /></> : (
                     <td colSpan={4}>
                       <form action={updateMember} className="flex flex-wrap items-center gap-2">

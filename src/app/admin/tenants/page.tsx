@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { Flash, PageHeader, StatusBadge, Table, sp } from "@/components/ui";
@@ -9,6 +10,15 @@ async function setStatus(fd: FormData) {
   const supabase = await createClient();
   const { error } = await supabase.rpc("admin_set_tenant_status", { p_tenant: str(fd, "id"), p_status: str(fd, "status"), p_reason: str(fd, "reason") || null });
   redirect(withParam("/admin/tenants", error ? "error" : "success", error?.message ?? "Statut mis à jour."));
+}
+async function support(fd: FormData) {
+  "use server";
+  const supabase = await createClient();
+  const enable = str(fd, "enable") === "1";
+  const id = str(fd, "id");
+  const { error } = await supabase.rpc("admin_support_access", { p_tenant: id, p_enable: enable, p_reason: str(fd, "reason") || null });
+  if (error) redirect(withParam("/admin/tenants", "error", error.message));
+  redirect(enable ? `/t/${id}` : withParam("/admin/tenants", "success", "Accès assistance terminé."));
 }
 async function grant(fd: FormData) {
   "use server";
@@ -37,6 +47,10 @@ export default async function Tenants({ searchParams }: { searchParams: Promise<
   if (q.q) tq = tq.ilike("name", `%${q.q.replace(/[%,()*]/g, "")}%`);
   if (q.sector) tq = tq.eq("sector", q.sector);
   const { data } = await tq;
+  const { data: { user } } = await supabase.auth.getUser();
+  const { data: mine } = await supabase.from("memberships").select("tenant_id, is_active, support_access").eq("user_id", user!.id);
+  const supportOn = new Set((mine ?? []).filter((m) => m.support_access && m.is_active).map((m) => m.tenant_id));
+  const ownMember = new Set((mine ?? []).filter((m) => !m.support_access && m.is_active).map((m) => m.tenant_id));
   return (
     <div>
       <PageHeader title="Établissements inscrits" />
@@ -54,6 +68,17 @@ export default async function Tenants({ searchParams }: { searchParams: Promise<
               <td className="text-xs">{dateTime(s?.status === "trialing" ? s.trial_ends_at : s?.current_period_end)}</td>
               <td><StatusBadge status={t.status} /></td>
               <td className="space-y-1">
+                <div className="flex flex-wrap gap-1">
+                  <Link href={`/t/${t.id}`} className="btn-ghost btn-sm">👁️ Voir</Link>
+                  {ownMember.has(t.id) ? <span className="badge bg-slate-100">Vous êtes membre</span> : supportOn.has(t.id) ? (
+                    <form action={support} className="flex gap-1"><input type="hidden" name="id" value={t.id} /><input type="hidden" name="enable" value="0" />
+                      <Link href={`/t/${t.id}`} className="btn-primary btn-sm">🛠️ Ouvrir (accès complet)</Link><button className="btn-ghost btn-sm">Terminer l&apos;assistance</button></form>
+                  ) : (
+                    <form action={support} className="flex gap-1"><input type="hidden" name="id" value={t.id} /><input type="hidden" name="enable" value="1" />
+                      <input name="reason" placeholder="Motif (visible par le client)" className="input w-40 py-1 text-xs" />
+                      <button className="btn-dark btn-sm">🛠️ Accès complet</button></form>
+                  )}
+                </div>
                 <form action={setStatus} className="flex gap-1"><input type="hidden" name="id" value={t.id} />
                   {t.status === "active" ? <><input name="reason" placeholder="Motif" className="input w-28 py-1 text-xs" /><button name="status" value="suspended" className="btn-danger btn-sm">Suspendre</button></>
                     : <button name="status" value="active" className="btn-primary btn-sm">Réactiver</button>}</form>

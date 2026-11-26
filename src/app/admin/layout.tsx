@@ -3,7 +3,7 @@ import { requirePlatformAdmin } from "@/lib/context";
 import { Logo } from "@/components/Logo";
 
 const NAV = [
-  ["/admin", "📊 Vue globale"], ["/admin/tenants", "🏢 Établissements"], ["/admin/plans", "⭐ Formules & tarifs"],
+  ["/admin", "📊 Vue globale"], ["/admin/tenants", "🏢 Établissements"], ["/admin/plans", "⭐ Formules & tarifs"], ["/admin/roles", "🔑 Rôles & permissions"],
   ["/admin/transactions", "💳 Transactions"], ["/admin/leads", "📩 Demandes de contact"], ["/admin/tickets", "🛟 Assistance"], ["/admin/promo", "🎨 Design du jour"],
   ["/admin/card", "🪪 Ma carte"], ["/admin/settings", "⚙️ Paramètres"],
 ];

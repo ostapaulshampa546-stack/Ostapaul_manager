@@ -26,11 +26,10 @@ export default async function Home() {
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.2em] text-gold-400">Conçu pour la RDC · prêt pour l&apos;Afrique</p>
             <h1 className="mt-4 text-4xl font-extrabold leading-tight md:text-6xl">
-              Un seul logiciel. Trois secteurs. <span className="text-electric-500">Une gestion intelligente.</span>
+              {info.heroTitle ?? <>Un seul logiciel. Trois secteurs. <span className="text-electric-500">Une gestion intelligente.</span></>}
             </h1>
             <p className="mt-6 max-w-2xl text-lg text-white/75">
-              OSTAPAUL MANAGER gère vos restaurants, écoles, instituts supérieurs, universités et PME : ventes, frais scolaires, présences,
-              stocks, personnel et finances — sur ordinateur, tablette et smartphone.
+              {info.heroSubtitle ?? "OSTAPAUL MANAGER gère vos restaurants, écoles, instituts supérieurs, universités et PME : ventes, frais scolaires, présences, stocks, personnel et finances — sur ordinateur, tablette et smartphone."}
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link href="/signup" className="btn-gold px-6 py-3 text-base">Commencer gratuitement{info.trialLabel ? ` — ${info.trialLabel}` : ""}</Link>

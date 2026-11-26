@@ -9,6 +9,7 @@ Plateforme SaaS multi-établissements pour restaurants, écoles / instituts / un
 - IA : Claude (assistant sur données réelles, OCR de factures) — formule Premium
 
 Architecture détaillée : [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
+Guide du propriétaire (comptes, clés, urgences, sauvegardes, faire évoluer le logiciel) : [`docs/GUIDE_PROPRIETAIRE.md`](docs/GUIDE_PROPRIETAIRE.md).
 
 ## Démarrage
 

@@ -78,6 +78,12 @@ export default async function TenantLayout({ children, params }: { children: Rea
           <form action="/auth/signout" method="post"><button className="btn-ghost btn-sm">{t("Déconnexion")}</button></form>
         </header>
 
+        {ctx.supportMode && (
+          <div className="no-print flex flex-wrap items-center justify-between gap-2 bg-navy-950 px-4 py-2 text-sm text-gold-400">
+            <span>{ctx.supportMode === "full" ? "🛠️ Mode assistance : accès complet (le propriétaire a été prévenu)." : "👁️ Consultation Super Admin : lecture seule."}</span>
+            <Link href="/admin/tenants" className="font-semibold underline">Retour à l&apos;Espace Super Admin</Link>
+          </div>
+        )}
         {ctx.tenant.status === "suspended" && (
           <div className="no-print bg-red-600 px-4 py-2 text-sm text-white">Compte suspendu par l&apos;administrateur de la plateforme{ctx.tenant.suspended_reason ? ` : ${ctx.tenant.suspended_reason}` : ""}. Consultation seule.</div>
         )}

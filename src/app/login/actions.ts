@@ -17,7 +17,7 @@ async function clientIp() {
   return (h.get("x-forwarded-for")?.split(",")[0] ?? h.get("x-real-ip") ?? "").trim().slice(0, 64) || null;
 }
 
-type Guard = { blocked: boolean; retry_after_seconds: number; remaining: number };
+type Guard = { blocked: boolean; retry_after_seconds: number; remaining: number; lock_minutes?: number };
 
 function waitMessage(seconds: number) {
   const min = Math.max(1, Math.ceil(seconds / 60));
@@ -25,8 +25,8 @@ function waitMessage(seconds: number) {
 }
 
 /**
- * Connexion protégée : 4 échecs consécutifs => blocage d'environ 1 heure (compte),
- * 20 échecs par heure depuis une même adresse IP => blocage de l'IP.
+ * Connexion protégée : N échecs consécutifs => blocage du compte (N et durée réglables par le super admin),
+ * 5×N échecs depuis une même adresse IP => blocage de l'IP.
  */
 export async function login(formData: FormData) {
   const email = String(formData.get("email") ?? "").trim().toLowerCase();
@@ -58,7 +58,9 @@ export async function login(formData: FormData) {
     if (!g) redirect(back("E-mail ou mot de passe incorrect."));
     if (g?.blocked) redirect(back(waitMessage(g.retry_after_seconds)));
     const left = g?.remaining ?? 0;
-    redirect(back(`E-mail ou mot de passe incorrect. ${left} tentative${left > 1 ? "s" : ""} restante${left > 1 ? "s" : ""} avant un blocage d'une heure.`));
+    const lock = g?.lock_minutes ?? 60;
+    const lockText = lock % 60 === 0 ? `${lock / 60} heure${lock >= 120 ? "s" : ""}` : `${lock} minutes`;
+    redirect(back(`E-mail ou mot de passe incorrect. ${left} tentative${left > 1 ? "s" : ""} restante${left > 1 ? "s" : ""} avant un blocage de ${lockText}.`));
   }
   if (!guardMissing) await admin.rpc("login_record", { p_email_hash: emailHash, p_ip: ip, p_success: true });
   redirect(next);

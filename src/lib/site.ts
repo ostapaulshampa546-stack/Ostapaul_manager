@@ -9,6 +9,9 @@ export type PlatformInfo = {
   email: string | null;
   whatsapp: string | null;
   minPrice: Record<string, number>;
+  heroTitle: string | null;
+  heroSubtitle: string | null;
+  announcement: string | null;
 };
 
 export function trialLabel(hours: number) {
@@ -21,7 +24,7 @@ export function trialLabel(hours: number) {
 export const getPlatformInfo = cache(async (): Promise<PlatformInfo> => {
   const supabase = await createClient();
   const [{ data: s }, { data: plans }] = await Promise.all([
-    supabase.from("platform_settings").select("trial_hours, support_phone, support_email").maybeSingle(),
+    supabase.from("platform_settings").select("trial_hours, support_phone, support_email, site_hero_title, site_hero_subtitle, site_announcement").maybeSingle(),
     supabase.from("plans").select("sector, price_usd").eq("is_active", true),
   ]);
   const minPrice: Record<string, number> = {};
@@ -35,5 +38,8 @@ export const getPlatformInfo = cache(async (): Promise<PlatformInfo> => {
     email: s?.support_email ?? null,
     whatsapp: digits.length >= 9 ? `https://wa.me/${digits}` : null,
     minPrice,
+    heroTitle: s?.site_hero_title?.trim() || null,
+    heroSubtitle: s?.site_hero_subtitle?.trim() || null,
+    announcement: s?.site_announcement?.trim() || null,
   };
 });
