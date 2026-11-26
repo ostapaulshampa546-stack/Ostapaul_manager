@@ -2,6 +2,7 @@
 set client_min_messages = notice;
 reset role;
 select set_config('request.jwt.claims', '{"role":"service_role"}', false);
+update public.platform_settings set login_max_attempts = 4, login_lock_minutes = 60;
 select tests.put('h', repeat('a', 64));
 select tests.ok((public.login_guard(tests.get('h'), '1.2.3.4') ->> 'remaining')::int = 4, 'connexion : 4 tentatives disponibles');
 select public.login_record(tests.get('h'), '1.2.3.4', false) from generate_series(1, 3);
@@ -22,3 +23,4 @@ select tests.fails($$select public.login_guard(repeat('c', 64), null)$$, 'journa
 select tests.fails($$select count(*) from public.login_attempts$$, 'table des tentatives invisible aux clients');
 reset role;
 do $$ begin raise notice 'LOGIN TESTS PASSED'; end $$;
+reset role; update public.platform_settings set login_max_attempts = 3, login_lock_minutes = 2880;

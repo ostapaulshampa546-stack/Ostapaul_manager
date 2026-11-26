@@ -47,8 +47,8 @@ export default async function AdminSettings({ searchParams }: { searchParams: Pr
         </section>
         <section className="card grid gap-4 sm:grid-cols-2">
           <h2 className="font-bold sm:col-span-2">Sécurité des connexions</h2>
-          <F name="login_max_attempts" label="Tentatives avant blocage" type="number" min={3} max={20} hint="Entre 3 et 20 (une adresse IP est bloquée après 5 fois ce nombre)" />
-          <F name="login_lock_minutes" label="Durée du blocage (minutes)" type="number" min={5} max={1440} hint="Entre 5 et 1440 (24 h)" />
+          <F name="login_max_attempts" label="Tentatives avant blocage" type="number" min={3} max={20} hint="Entre 3 et 20 · une adresse IP est en plus bloquée 1 h après 20 échecs" />
+          <F name="login_lock_minutes" label="Durée du blocage (minutes)" type="number" min={5} max={10080} hint="Entre 5 et 10080 (7 jours) · 60 = 1 h · 1440 = 24 h · 2880 = 48 h" />
         </section>
         <section className="card grid gap-4">
           <h2 className="font-bold">Textes du site</h2>

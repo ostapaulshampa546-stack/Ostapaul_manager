@@ -84,7 +84,7 @@ facturation des abonnements, super admin, audit et anti-fraude.
 
 ## Sécurité des comptes et des données
 
-- **Connexion** : 4 échecs consécutifs bloquent le compte environ 1 heure ; 20 échecs par heure depuis une même adresse IP bloquent cette IP. Les e-mails du journal sont stockés sous forme d'empreinte SHA-256 (`login_attempts`, invisible des clients). Lien « Mot de passe oublié » pour se débloquer.
+- **Connexion** : 3 échecs consécutifs bloquent le compte pendant 48 heures (réglable dans Super Admin → Paramètres) ; 20 échecs en une heure depuis une même adresse IP bloquent cette IP pendant 1 heure. Les e-mails du journal sont stockés sous forme d'empreinte SHA-256 (`login_attempts`, invisible des clients). Lien « Mot de passe oublié » pour se débloquer.
 - **Mots de passe** : 8 à 72 caractères, espaces et caractères spéciaux autorisés ; refus des mots de passe courants, suites, répétitions, et de ceux qui contiennent le nom ou l'e-mail (`src/lib/password.ts`). Hachés par Supabase Auth avec **bcrypt** : jamais stockés ni visibles en clair.
 - **Données sensibles** (adresses, contact d'urgence, lieu de naissance, n° fiscal, motifs de congé, notes) : chiffrées en **AES-256-GCM** avant l'enregistrement (`src/lib/crypto.ts`, champs `sensitive` dans `src/lib/resources.ts`). Clé `ENCRYPTION_KEY` côté serveur uniquement. **Sauvegardez-la hors ligne : sans elle, ces données sont irrécupérables.**
 - La base Supabase est en outre chiffrée sur disque (AES-256) et toutes les connexions passent en HTTPS/TLS.

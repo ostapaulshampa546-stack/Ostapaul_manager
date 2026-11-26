@@ -45,3 +45,15 @@ select tests.ok((public.login_guard(repeat('d', 64), null) ->> 'remaining')::int
   'règles de blocage réglables (6 tentatives, 30 min)');
 update public.platform_settings set login_max_attempts = 4, login_lock_minutes = 60;
 do $$ begin raise notice 'OWNER CONTROL TESTS PASSED'; end $$;
+-- 3 tentatives / 48 h ; IP : 20 échecs / 1 h
+reset role;
+update public.platform_settings set login_max_attempts = 3, login_lock_minutes = 2880;
+select public.login_record(repeat('e', 64), '5.5.5.5', false) from generate_series(1, 3);
+select tests.ok((public.login_guard(repeat('e', 64), '5.5.5.5') ->> 'blocked')::boolean
+  and (public.login_guard(repeat('e', 64), '5.5.5.5') ->> 'retry_after_seconds')::int > 47 * 3600, 'compte bloqué 48 h après 3 échecs');
+update public.login_attempts set created_at = created_at - interval '2 hours' where email_hash = repeat('e', 64);
+select tests.ok((public.login_guard(repeat('e', 64), '5.5.5.5') ->> 'blocked')::boolean, 'toujours bloqué après 2 heures');
+select tests.ok(not (public.login_guard(repeat('f', 64), '5.5.5.5') ->> 'blocked')::boolean, 'les autres comptes de la même IP restent libres');
+select public.login_record(repeat('e', 64), '5.5.5.5', true);
+select tests.ok(not (public.login_guard(repeat('e', 64), '5.5.5.5') ->> 'blocked')::boolean, 'réinitialisation du mot de passe : débloqué');
+update public.platform_settings set login_max_attempts = 4, login_lock_minutes = 60;
