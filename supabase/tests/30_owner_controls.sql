@@ -57,3 +57,21 @@ select tests.ok(not (public.login_guard(repeat('f', 64), '5.5.5.5') ->> 'blocked
 select public.login_record(repeat('e', 64), '5.5.5.5', true);
 select tests.ok(not (public.login_guard(repeat('e', 64), '5.5.5.5') ->> 'blocked')::boolean, 'réinitialisation du mot de passe : débloqué');
 update public.platform_settings set login_max_attempts = 4, login_lock_minutes = 60;
+-- Surveillance : réservée au super admin
+reset role;
+do $$ declare ok boolean := false; begin
+  perform set_config('request.jwt.claims', json_build_object('sub', (select user_id from public.memberships where role <> 'owner' limit 1), 'role', 'authenticated')::text, true);
+  set local role authenticated;
+  begin perform public.admin_monitoring(); exception when insufficient_privilege then ok := true; end;
+  reset role;
+  perform tests.ok(ok, 'surveillance refusée aux non-admins');
+end $$;
+reset role;
+do $$ declare r jsonb; begin
+  perform set_config('request.jwt.claims', json_build_object('sub', (select user_id from public.platform_admins limit 1), 'role', 'authenticated')::text, true);
+  set local role authenticated;
+  r := public.admin_monitoring();
+  reset role;
+  perform tests.ok(r ? 'login' and r ? 'fraud' and r ? 'billing' and (r -> 'login' ->> 'max_attempts') is not null, 'surveillance : rapport complet pour le super admin');
+end $$;
+reset role;

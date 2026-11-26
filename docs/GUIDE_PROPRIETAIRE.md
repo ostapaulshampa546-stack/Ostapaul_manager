@@ -26,6 +26,7 @@ Tout ce qui est décrit ici se fait avec **vos** comptes.
 | Menu | Ce que vous pouvez faire |
 |---|---|
 | Vue globale | Établissements, revenus, abonnements, renouvellements à venir |
+| Surveillance | État du jour en un coup d'œil (✅ / ⚠️ / 🚨) : comptes et IP bloqués, fraude, factures en retard, essais qui expirent, tâches automatiques, messages |
 | Établissements | **Voir** un établissement (lecture seule), **Accès complet** (mode assistance : le propriétaire est prévenu et peut le retirer), suspendre / réactiver, offrir des jours, encaisser un abonnement en espèces |
 | Formules & tarifs | Prix, nombre d'utilisateurs, fonctionnalités de chaque formule, activer / masquer une formule |
 | Rôles & permissions | Ce que peuvent faire gérant, caissier, comptable, enseignant, serveur, cuisinier… dans tous les établissements |
