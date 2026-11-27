@@ -35,25 +35,29 @@ export async function login(formData: FormData) {
   const back = (msg: string) => `/login?error=${encodeURIComponent(msg)}&next=${encodeURIComponent(next)}`;
   if (!email || !password) redirect(back("Saisissez votre e-mail et votre mot de passe."));
 
-  let admin: ReturnType<typeof createAdminClient>;
-  try { admin = createAdminClient(); } catch {
-    redirect(back("Service de connexion momentanément indisponible. Réessayez plus tard."));
-  }
   const emailHash = sha256(email);
   const ip = await clientIp();
 
-  const { data: guard, error: gErr } = await admin.rpc("login_guard", { p_email_hash: emailHash, p_ip: ip });
-  // Migration 0011 pas encore appliquée (fonction absente) : connexion sans blocage plutôt que site inaccessible.
-  const guardMissing = gErr?.code === "PGRST202" || gErr?.code === "42883";
-  if (gErr && !guardMissing) redirect(back("Service de connexion momentanément indisponible. Réessayez plus tard."));
-  if (guardMissing) console.error("login_guard absent : appliquez la migration 20261123000011_login_protection.sql");
-  if (!guardMissing && (guard as Guard).blocked) redirect(back(waitMessage((guard as Guard).retry_after_seconds)));
+  // Protection anti-tentatives. Si elle est indisponible (clé serveur absente ou invalide, migration manquante),
+  // la connexion reste possible — protégée par les limites de Supabase Auth — plutôt que de bloquer tout le monde.
+  let admin: ReturnType<typeof createAdminClient> | null = null;
+  let guard: Guard | null = null;
+  try {
+    admin = createAdminClient();
+    const { data, error: gErr } = await admin.rpc("login_guard", { p_email_hash: emailHash, p_ip: ip });
+    if (gErr) throw new Error(`${gErr.code ?? ""} ${gErr.message}`);
+    guard = data as Guard;
+  } catch (e) {
+    admin = null;
+    console.error("[login] protection anti-tentatives indisponible — vérifiez SUPABASE_SERVICE_ROLE_KEY :", e instanceof Error ? e.message : e);
+  }
+  if (guard?.blocked) redirect(back(waitMessage(guard.retry_after_seconds)));
 
   const supabase = await createClient();
   const { error } = await supabase.auth.signInWithPassword({ email, password });
   if (error) {
     if (error.code === "email_not_confirmed") redirect(back("Confirmez d'abord votre adresse e-mail (lien reçu par e-mail)."));
-    const { data: after } = guardMissing ? { data: null } : await admin.rpc("login_record", { p_email_hash: emailHash, p_ip: ip, p_success: false });
+    const { data: after } = admin ? await admin.rpc("login_record", { p_email_hash: emailHash, p_ip: ip, p_success: false }) : { data: null };
     const g = after as Guard | null;
     if (!g) redirect(back("E-mail ou mot de passe incorrect."));
     if (g?.blocked) redirect(back(waitMessage(g.retry_after_seconds)));
@@ -62,7 +66,7 @@ export async function login(formData: FormData) {
     const lockText = lock % 60 === 0 ? `${lock / 60} heure${lock >= 120 ? "s" : ""}` : `${lock} minutes`;
     redirect(back(`E-mail ou mot de passe incorrect. ${left} tentative${left > 1 ? "s" : ""} restante${left > 1 ? "s" : ""} avant un blocage de ${lockText}.`));
   }
-  if (!guardMissing) await admin.rpc("login_record", { p_email_hash: emailHash, p_ip: ip, p_success: true });
+  if (admin) await admin.rpc("login_record", { p_email_hash: emailHash, p_ip: ip, p_success: true });
   redirect(next);
 }
 

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { PageHeader, Stat } from "@/components/ui";
 import { dateTime, money, num } from "@/lib/format";
 
@@ -19,8 +20,17 @@ type M = {
 
 type Alert = { level: "urgent" | "warn"; text: string; href?: string; action?: string };
 
-function alerts(m: M): Alert[] {
+/** La clé serveur Supabase (service_role) fonctionne-t-elle ? Requête en lecture seule. */
+async function serverKeyOk() {
+  try {
+    const { error } = await createAdminClient().rpc("login_guard", { p_email_hash: "0".repeat(64), p_ip: null });
+    return !error;
+  } catch { return false; }
+}
+
+function alerts(m: M, keyOk: boolean): Alert[] {
   const a: Alert[] = [];
+  if (!keyOk) a.push({ level: "urgent", text: "La clé secrète Supabase (SUPABASE_SERVICE_ROLE_KEY) enregistrée dans Vercel est absente ou invalide : la protection des connexions, les tâches automatiques et les paiements Mobile Money ne fonctionnent pas.", action: "Copiez la clé « service_role » depuis Supabase → Settings → API Keys, collez-la dans Vercel → Environment Variables, puis Redeploy.", href: "https://vercel.com/ostapaul/ostapaul-manager/settings/environment-variables" });
   if (m.login.blocked_ips > 0) a.push({ level: "urgent", text: `${m.login.blocked_ips} adresse(s) IP bloquée(s) : quelqu'un essaie de nombreux mots de passe (attaque possible).`, action: "Si cela se répète, activez le mode « Attack Challenge » dans Vercel → Firewall.", href: "https://vercel.com/ostapaul/ostapaul-manager/firewall" });
   if (m.fraud.open_high > 0) a.push({ level: "urgent", text: `${m.fraud.open_high} alerte(s) anti-fraude grave(s) non traitée(s).`, action: "Contactez l'établissement concerné et vérifiez l'opération.", href: "#fraude" });
   if (m.cron && m.cron.failed_24h > 0) a.push({ level: "urgent", text: `${m.cron.failed_24h} échec(s) des tâches automatiques (facturation, rappels) sur 24 h.`, action: "Transmettez le message d'erreur ci-dessous à votre développeur.", href: "#taches" });
@@ -40,7 +50,7 @@ export default async function Monitoring() {
   const { data, error } = await supabase.rpc("admin_monitoring");
   if (error) return <div className="card text-red-600">Surveillance indisponible : {error.message}</div>;
   const m = data as M;
-  const list = alerts(m);
+  const list = alerts(m, await serverKeyOk());
   const urgent = list.filter((x) => x.level === "urgent");
   const verdict = urgent.length ? { cls: "border-red-300 bg-red-50 text-red-800", t: `🚨 Urgent : ${urgent.length} point(s) à traiter` }
     : list.length ? { cls: "border-amber-300 bg-amber-50 text-amber-900", t: `⚠️ À regarder : ${list.length} point(s)` }
