@@ -75,3 +75,15 @@ do $$ declare r jsonb; begin
   perform tests.ok(r ? 'login' and r ? 'fraud' and r ? 'billing' and (r -> 'login' ->> 'max_attempts') is not null, 'surveillance : rapport complet pour le super admin');
 end $$;
 reset role;
+-- Photos des cartes
+reset role;
+do $$ declare t uuid; e uuid; ok boolean := false; begin
+  select tenant_id, id into t, e from public.employees limit 1;
+  if e is null then perform tests.ok(true, 'photos : aucun employé de test (ignoré)'); return; end if;
+  begin update public.employees set photo_path = gen_random_uuid()::text || '/photos/x.jpg' where id = e;
+  exception when check_violation then ok := true; end;
+  perform tests.ok(ok, 'photo : chemin hors du dossier de l''établissement refusé');
+  update public.employees set photo_path = t::text || '/photos/employee/' || e::text || '-1.jpg' where id = e;
+  perform tests.ok(true, 'photo : chemin valide accepté');
+  update public.employees set photo_path = null where id = e;
+end $$;

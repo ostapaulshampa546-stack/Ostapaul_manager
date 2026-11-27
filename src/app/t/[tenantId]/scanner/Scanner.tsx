@@ -4,7 +4,7 @@ import jsQR from "jsqr";
 import { createClient } from "@/lib/supabase/client";
 import { enqueueScan, pendingScans, removeScan, type QueuedScan } from "@/lib/offline/queue";
 
-type Result = { ok: boolean; name?: string; detail?: string; status?: string; error?: string; offline?: boolean; at: string };
+type Result = { ok: boolean; name?: string; detail?: string; status?: string; error?: string; offline?: boolean; at: string; photo?: string };
 
 declare global {
   interface Window { BarcodeDetector?: new (o: { formats: string[] }) => { detect: (s: CanvasImageSource) => Promise<{ rawValue: string }[]> } }
@@ -75,7 +75,13 @@ export function Scanner({ tenantId }: { tenantId: string }) {
     }
     const d = data as { ok: boolean; name?: string; detail?: string; status?: string; error?: string };
     navigator.vibrate?.(d.ok ? 80 : [60, 40, 60]);
-    setResults((r) => [{ ...d, at }, ...r].slice(0, 20));
+    // Photo de la personne : le surveillant vérifie que la carte appartient bien à celui qui la présente
+    let photo: string | undefined;
+    if (d.ok) {
+      const { data: path } = await supabase.rpc("card_photo", { p_tenant: tenantId, p_token: token });
+      if (typeof path === "string" && path) photo = (await supabase.storage.from("tenant-files").createSignedUrl(path, 600)).data?.signedUrl;
+    }
+    setResults((r) => [{ ...d, at, photo }, ...r].slice(0, 20));
   }, [tenantId, refreshPending]);
 
   useEffect(() => {
@@ -163,8 +169,9 @@ export function Scanner({ tenantId }: { tenantId: string }) {
         <ul className="space-y-2" aria-live="polite">
           {results.map((r, i) => (
             <li key={i} className={`rounded-lg border p-3 text-sm ${r.ok ? (r.offline ? "border-amber-200 bg-amber-50" : "border-emerald-200 bg-emerald-50") : "border-red-200 bg-red-50"}`}>
-              <div className="flex justify-between font-semibold">
-                <span>{r.ok ? (r.offline ? "⏳" : "✅") : "❌"} {r.name ?? r.error}</span><span className="text-xs text-slate-500">{r.at}</span>
+              <div className="flex items-center justify-between gap-3 font-semibold">
+                {r.photo && <img src={r.photo} alt="" className={`shrink-0 rounded border border-white object-cover shadow ${i === 0 ? "h-24 w-[72px]" : "h-12 w-9"}`} />}
+                <span className="flex-1">{r.ok ? (r.offline ? "⏳" : "✅") : "❌"} {r.name ?? r.error}</span><span className="text-xs text-slate-500">{r.at}</span>
               </div>
               {r.detail && <div className="text-xs text-slate-600">{r.detail}</div>}
               {r.status === "late" && <div className="text-xs font-semibold text-orange-600">En retard</div>}
