@@ -25,6 +25,7 @@ export async function SiteFooter() {
           <ul className="mt-3 space-y-1.5 text-sm">
             <li><Link href="/pricing" className="hover:text-white">Tarifs</Link></li>
             <li><Link href="/faq" className="hover:text-white">Questions fréquentes</Link></li>
+            <li><Link href="/inscription" className="hover:text-white">Comment s&apos;inscrire</Link></li>
             <li><Link href="/signup" className="hover:text-white">Essai gratuit{info.trialLabel ? ` de ${info.trialLabel}` : ""}</Link></li>
             <li><Link href="/login" className="hover:text-white">Connexion</Link></li>
           </ul>

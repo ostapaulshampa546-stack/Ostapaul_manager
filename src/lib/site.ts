@@ -12,6 +12,7 @@ export type PlatformInfo = {
   heroTitle: string | null;
   heroSubtitle: string | null;
   announcement: string | null;
+  signupVideoUrl: string | null;
 };
 
 export function trialLabel(hours: number) {
@@ -24,7 +25,7 @@ export function trialLabel(hours: number) {
 export const getPlatformInfo = cache(async (): Promise<PlatformInfo> => {
   const supabase = await createClient();
   const [{ data: s }, { data: plans }] = await Promise.all([
-    supabase.from("platform_settings").select("trial_hours, support_phone, support_email, site_hero_title, site_hero_subtitle, site_announcement").maybeSingle(),
+    supabase.from("platform_settings").select("trial_hours, support_phone, support_email, site_hero_title, site_hero_subtitle, site_announcement, site_signup_video_url").maybeSingle(),
     supabase.from("plans").select("sector, price_usd").eq("is_active", true),
   ]);
   const minPrice: Record<string, number> = {};
@@ -41,5 +42,6 @@ export const getPlatformInfo = cache(async (): Promise<PlatformInfo> => {
     heroTitle: s?.site_hero_title?.trim() || null,
     heroSubtitle: s?.site_hero_subtitle?.trim() || null,
     announcement: s?.site_announcement?.trim() || null,
+    signupVideoUrl: s?.site_signup_video_url?.trim() || null,
   };
 });

@@ -14,6 +14,7 @@ async function save(fd: FormData) {
     login_max_attempts: n("login_max_attempts"), login_lock_minutes: n("login_lock_minutes"),
     site_hero_title: str(fd, "site_hero_title") || null, site_hero_subtitle: str(fd, "site_hero_subtitle") || null,
     site_announcement: str(fd, "site_announcement") || null,
+    site_signup_video_url: str(fd, "site_signup_video_url") || null,
     updated_at: new Date().toISOString(),
   }).eq("id", true);
   revalidatePath("/", "layout");
@@ -52,6 +53,7 @@ export default async function AdminSettings({ searchParams }: { searchParams: Pr
         </section>
         <section className="card grid gap-4">
           <h2 className="font-bold">Textes du site</h2>
+          <F name="site_signup_video_url" label="Vidéo « Comment s'inscrire » (lien YouTube ou fichier .mp4)" hint="Ex. https://youtu.be/xxxxxxxx — laisser vide pour afficher la démonstration animée. Visible sur /inscription, l'accueil et la page d'inscription." />
           <F name="site_announcement" label="Bandeau d'annonce (en haut de toutes les pages du site)" hint="Ex. « Offre de rentrée : 1 mois offert ! » — laisser vide pour masquer (240 caractères max.)" />
           <F name="site_hero_title" label="Grand titre de la page d'accueil" hint="Vide = « Un seul logiciel. Trois secteurs. Une gestion intelligente. »" />
           <div><label className="label" htmlFor="site_hero_subtitle">Texte sous le titre</label>

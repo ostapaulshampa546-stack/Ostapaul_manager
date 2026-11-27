@@ -16,6 +16,9 @@ export default async function SignupPage({ searchParams }: { searchParams: Promi
         <Logo />
         <h1 className="mt-6 text-2xl font-bold">Créer votre compte</h1>
         <p className="mb-6 text-sm text-slate-500">{info.trialLabel ? `Essai gratuit de ${info.trialLabel}, sans engagement.` : "Sans engagement."}</p>
+        <Link href="/inscription" className="mb-4 flex items-center gap-2 rounded-xl bg-slate-50 px-3 py-2 text-sm font-semibold text-navy-900 ring-1 ring-slate-200 hover:bg-slate-100">
+          <span className="flex h-7 w-7 items-center justify-center rounded-full bg-gold-500 text-xs text-navy-950">▶</span> Voir comment s&apos;inscrire (démonstration 3D)
+        </Link>
         <Flash error={sp.error} />
         <form action={signup} className="space-y-4">
           <input type="hidden" name="sector" value={sp.sector ?? ""} />

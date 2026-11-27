@@ -6,6 +6,7 @@ import { SECTOR_PAGES, FAQ } from "@/lib/site-content";
 import { getPlatformInfo } from "@/lib/site";
 import { Hero3D } from "@/components/site/Hero3D";
 import { Tilt } from "@/components/site/Tilt";
+import { SignupDemo } from "@/components/site/SignupDemo";
 
 const HIGHLIGHTS = [
   { icon: "🪪", t: "QR codes partout", d: "Cartes QR générées pour chaque élève, enseignant et employé ; QR sur chaque table de restaurant ; reçus vérifiables par QR." },
@@ -82,6 +83,17 @@ export default async function Home() {
             ))}
           </ol>
         </div>
+      </section>
+
+      <section className="mx-auto max-w-6xl px-4 py-16" id="inscription">
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold md:text-3xl">Comment s&apos;inscrire ? 1 minute suffit</h2>
+            <p className="mt-1 text-slate-600">Suivez la démonstration, puis créez votre compte.</p>
+          </div>
+          <Link href="/inscription" className="text-sm font-semibold text-electric-600">Explications détaillées →</Link>
+        </div>
+        <div className="mt-6"><SignupDemo trial={info.trialLabel} videoUrl={info.signupVideoUrl} /></div>
       </section>
 
       <section className="mx-auto max-w-6xl px-4 py-16">
