@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { Empty, PageHeader } from "@/components/ui";
 import { PrintButton } from "@/components/PrintButton";
 import { qrSvg, tableUrl } from "@/lib/qr";
+import { MenuQrCard } from "@/components/MenuQrCard";
 
 export default async function TablesQR({ params }: { params: Promise<{ tenantId: string }> }) {
   const { tenantId } = await params;
@@ -12,7 +13,8 @@ export default async function TablesQR({ params }: { params: Promise<{ tenantId:
   const items = await Promise.all((tables ?? []).map(async (t) => ({ ...t, svg: await qrSvg(tableUrl(t.qr_token)) })));
   return (
     <div>
-      <PageHeader title="QR codes des tables" subtitle="À imprimer et poser sur chaque table : le client scanne, consulte le menu et commande." actions={<PrintButton />} />
+      <PageHeader title="QR codes des tables" subtitle="Créés automatiquement pour chaque table. À imprimer et poser sur la table : le client scanne, consulte le menu et commande." actions={<PrintButton />} />
+      <MenuQrCard tenantId={tenantId} publicToken={ctx.tenant.public_token} items={(await supabase.from("menu_items").select("id", { count: "exact", head: true }).eq("tenant_id", tenantId).eq("is_available", true)).count ?? 0} />
       {!items.length ? <Empty>Créez d&apos;abord vos tables.</Empty> : (
         <div className="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-4">
           {items.map((t) => (

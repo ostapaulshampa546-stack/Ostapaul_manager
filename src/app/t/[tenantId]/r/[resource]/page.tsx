@@ -9,6 +9,7 @@ import { TIER_LABEL, requiredTierFor, FEATURE_LABELS } from "@/lib/plans";
 import { saveResource, deleteResource } from "../actions";
 import { decryptForDisplay } from "@/lib/crypto";
 import { IMPORTABLE } from "@/lib/import-config";
+import { MenuQrCard } from "@/components/MenuQrCard";
 
 type Row = Record<string, unknown> & { id: string };
 const PAGE = 50;
@@ -133,6 +134,7 @@ export default async function ResourcePage({ params, searchParams }: {
         </>}
       />
       <Flash error={sp(q.error) ?? (error ? error.message : null)} success={sp(q.success)} />
+      {res.key === "menu_items" && ctx.tenant.sector === "restaurant" && <MenuQrCard tenantId={tenantId} publicToken={ctx.tenant.public_token} items={total} />}
 
       {(creating || editing) && canWrite && (
         <form action={saveResource} className="card mb-6">

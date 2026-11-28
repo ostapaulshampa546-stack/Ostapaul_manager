@@ -3,7 +3,7 @@ import { useMemo, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 
 type Item = { id: string; name: string; description: string | null; price: number; currency: string };
-export type MenuData = { establishment: string; table: string; phone: string | null; ordering_enabled: boolean; categories: { id: string; name: string; items: Item[] }[]; uncategorized: Item[] };
+export type MenuData = { establishment: string; table: string | null; city?: string | null; phone: string | null; ordering_enabled: boolean; categories: { id: string; name: string; items: Item[] }[]; uncategorized: Item[] };
 
 const fmt = (n: number, c: string) => `${new Intl.NumberFormat("fr-FR", { maximumFractionDigits: c === "CDF" ? 0 : 2 }).format(n)} ${c === "USD" ? "$" : "FC"}`;
 
@@ -30,9 +30,16 @@ export function PublicMenu({ token, menu }: { token: string; menu: MenuData }) {
   return (
     <main className="mx-auto min-h-screen max-w-lg bg-white pb-40">
       <header className="bg-navy-900 px-5 py-6 text-white">
-        <div className="text-xs uppercase tracking-widest text-gold-400">Table {menu.table}</div>
+        <div className="text-xs uppercase tracking-widest text-gold-400">{menu.table ? `Table ${menu.table}` : `Notre menu${menu.city ? ` · ${menu.city}` : ""}`}</div>
         <h1 className="text-2xl font-bold">{menu.establishment}</h1>
       </header>
+      {!menu.table && menu.phone && (
+        <div className="mx-4 mt-4 flex gap-2">
+          <a href={`tel:${menu.phone.replace(/\s/g, "")}`} className="btn-primary flex-1 justify-center">📞 Appeler pour commander</a>
+          <a href={`https://wa.me/${menu.phone.replace(/\D/g, "")}`} target="_blank" rel="noopener noreferrer" className="btn-gold flex-1 justify-center">💬 WhatsApp</a>
+        </div>
+      )}
+      {!groups.length && <p className="p-8 text-center text-sm text-slate-500">Le menu sera bientôt disponible.</p>}
       {state.ok && <div className="m-4 rounded-lg bg-emerald-50 p-3 text-sm text-emerald-700">{state.ok}</div>}
       {state.error && <div className="m-4 rounded-lg bg-red-50 p-3 text-sm text-red-700">{state.error}</div>}
       {groups.map((g) => (

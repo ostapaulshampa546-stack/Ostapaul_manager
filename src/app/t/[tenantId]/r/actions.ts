@@ -40,7 +40,8 @@ export async function saveResource(formData: FormData) {
     redirect(withParam(`/t/${tenantId}/cards?type=${res.cardType}&id=${newId}`, "success",
       `${res.singular[0].toUpperCase()}${res.singular.slice(1)} enregistré(e) : voici sa carte, prête à imprimer. Ajoutez sa photo ci-dessous.`));
   }
-  redirect(withParam(back, "success", id ? "Modifications enregistrées." : `${res.singular[0].toUpperCase()}${res.singular.slice(1)} ajouté(e).`));
+  const menuNote = res.key === "menu_items" ? " Le QR code du menu est déjà à jour." : res.key === "dining_tables" && !id ? " Son QR code a été créé : imprimez-le depuis « Imprimer les QR »." : "";
+  redirect(withParam(back, "success", (id ? "Modifications enregistrées." : `${res.singular[0].toUpperCase()}${res.singular.slice(1)} ajouté(e).`) + menuNote));
 }
 
 export async function deleteResource(formData: FormData) {

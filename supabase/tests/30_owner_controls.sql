@@ -87,3 +87,15 @@ do $$ declare t uuid; e uuid; ok boolean := false; begin
   perform tests.ok(true, 'photo : chemin valide accepté');
   update public.employees set photo_path = null where id = e;
 end $$;
+-- QR du menu de l'établissement
+reset role;
+do $$ declare t public.tenants; m jsonb; begin
+  select * into t from public.tenants where sector = 'restaurant' limit 1;
+  if t.id is null then perform tests.ok(true, 'menu public : pas de restaurant de test (ignoré)'); return; end if;
+  set local role anon;
+  m := public.public_restaurant_menu(t.public_token);
+  reset role;
+  perform tests.ok(m ->> 'establishment' = t.name and (m ->> 'ordering_enabled')::boolean = false, 'menu public : lisible sans connexion, sans commande');
+  perform tests.ok(public.public_restaurant_menu('x') is null, 'menu public : jeton invalide refusé');
+end $$;
+reset role;

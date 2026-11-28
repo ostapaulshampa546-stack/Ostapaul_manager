@@ -50,6 +50,7 @@ export function navFor(sector: Sector, tenantId: string): NavItem[] {
       { group: "Restaurant", href: `${p}/restaurant/kitchen`, label: "Cuisine", icon: "👨‍🍳", perm: "kitchen.write" },
       { group: "Restaurant", href: `${p}/r/dining_tables`, label: "Tables & QR", icon: "🪑", perm: "tables.write" },
       { group: "Restaurant", href: `${p}/r/menu_items`, label: "Menu", icon: "🍲", perm: "menu.write" },
+      { group: "Restaurant", href: `${p}/restaurant/menu-qr`, label: "QR du menu", icon: "📱", perm: "menu.write" },
       { group: "Restaurant", href: `${p}/r/menu_categories`, label: "Catégories du menu", icon: "🗂️", perm: "menu.write" },
       ...stock(p), ...hr(p), ...common(p)];
   }
