@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { getTenantContext } from "@/lib/context";
 import { createClient } from "@/lib/supabase/server";
-import { Empty, PageHeader, sp } from "@/components/ui";
+import { Empty, Flash, PageHeader, sp } from "@/components/ui";
 import { PrintButton } from "@/components/PrintButton";
 import { cardUrl, qrSvg } from "@/lib/qr";
 import { date } from "@/lib/format";
@@ -49,6 +49,8 @@ export default async function Cards({ params, searchParams }: { params: Promise<
     <div>
       <PageHeader title="Cartes avec QR code" subtitle="Générées automatiquement pour chaque personne inscrite. Le QR sert au pointage et à la vérification."
         actions={<PrintButton label="Imprimer les cartes" />} />
+      <Flash success={q.success} error={q.error} />
+      {q.id && <div className="no-print mb-3"><Link href={`?type=${type}`} className="text-sm font-semibold text-electric-600">← Voir toutes les cartes</Link></div>}
       <div className="no-print mb-4 flex flex-wrap gap-2">
         {allowed.map((t) => <Link key={t} href={`?type=${t}`} className={t === type ? "btn-dark btn-sm" : "btn-ghost btn-sm"}>{TYPES[t].label}</Link>)}
         {type === "student" && (

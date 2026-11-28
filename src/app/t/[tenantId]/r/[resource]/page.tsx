@@ -8,6 +8,7 @@ import { date, money, num } from "@/lib/format";
 import { TIER_LABEL, requiredTierFor, FEATURE_LABELS } from "@/lib/plans";
 import { saveResource, deleteResource } from "../actions";
 import { decryptForDisplay } from "@/lib/crypto";
+import { IMPORTABLE } from "@/lib/import-config";
 
 type Row = Record<string, unknown> & { id: string };
 const PAGE = 50;
@@ -127,6 +128,7 @@ export default async function ResourcePage({ params, searchParams }: {
           {res.cardType && <Link href={`/t/${tenantId}/cards?type=${res.cardType}`} className="btn-ghost">🪪 Cartes QR</Link>}
           {res.key === "dining_tables" && <Link href={`/t/${tenantId}/restaurant/tables-qr`} className="btn-ghost">🖨️ Imprimer les QR</Link>}
           {ctx.has("export") && <a href={`/api/export/${res.key}?tenant=${tenantId}`} className="btn-ghost">⬇️ Excel (CSV)</a>}
+          {canWrite && IMPORTABLE.has(res.key) && <Link href={`${base}/import`} className="btn-ghost">📥 Ajouter plusieurs / Importer</Link>}
           {canWrite && <Link href={`${base}?new=1`} className="btn-primary">+ Ajouter</Link>}
         </>}
       />
@@ -190,7 +192,8 @@ export default async function ResourcePage({ params, searchParams }: {
           </table>
         </div>
       ) : (
-        <Empty>Aucun élément pour le moment.{canWrite && <> <Link href={`${base}?new=1`} className="font-semibold text-electric-600">Ajouter le premier</Link></>}</Empty>
+        <Empty>Aucun élément pour le moment.{canWrite && <> <Link href={`${base}?new=1`} className="font-semibold text-electric-600">Ajouter le premier</Link>
+          {IMPORTABLE.has(res.key) && <> ou <Link href={`${base}/import`} className="font-semibold text-electric-600">importer toute votre liste (Excel, copier-coller)</Link></>}</>}</Empty>
       )}
 
       {total > PAGE && (

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { getResource } from "@/lib/resources";
 import { getTenantContext } from "@/lib/context";
 import { createClient } from "@/lib/supabase/server";
 import { PageHeader, Stat } from "@/components/ui";
@@ -62,6 +63,19 @@ export default async function Dashboard({ params }: { params: Promise<{ tenantId
   const tips = insights(s, ctx.tenant.sector);
   const p = `/t/${tenantId}`;
 
+  // Démarrage rapide : listes encore vides que le client peut importer d'un coup
+  const QUICK: Record<string, [string, string, string][]> = {
+    restaurant: [["menu_items", "🍽️", "Votre menu"], ["products", "📦", "Vos produits en stock"], ["dining_tables", "🪑", "Vos tables"], ["employees", "🧑‍🍳", "Votre personnel"]],
+    school: [["classes", "🏫", "Vos classes"], ["students", "🎓", "Vos élèves / étudiants"], ["teachers", "👩‍🏫", "Vos enseignants"], ["employees", "🧑‍💼", "Votre personnel"]],
+    pme: [["products", "📦", "Vos produits"], ["customers", "🤝", "Vos clients"], ["suppliers", "🚚", "Vos fournisseurs"], ["employees", "🧑‍💼", "Votre personnel"]],
+  };
+  const quick = ctx.active ? (await Promise.all((QUICK[ctx.tenant.sector] ?? []).map(async ([key, icon, label]) => {
+    const r = getResource(key);
+    if (!r || !ctx.can(r.writePerm) || (r.feature && !ctx.has(r.feature))) return null;
+    const { count } = await supabase.from(r.table).select("id", { count: "exact", head: true }).eq("tenant_id", tenantId);
+    return count ? null : { key, icon, label };
+  }))).filter((x): x is { key: string; icon: string; label: string } => !!x) : [];
+
   return (
     <div>
       <PageHeader title={`${sector.icon} ${ctx.tenant.name}`} subtitle={`${sector.label} · ${ctx.tenant.city ?? ""} · tableau de bord en temps réel`}
@@ -70,6 +84,15 @@ export default async function Dashboard({ params }: { params: Promise<{ tenantId
           {ctx.can("attendance.scan") && <Link href={`${p}/scanner`} className="btn-dark">📷 Scanner QR</Link>}
         </>} />
       {error && <div className="card mb-4 text-sm text-red-600">{error.message}</div>}
+      {quick.length > 0 && (
+        <div className="card mb-4 border-gold-300 bg-gradient-to-r from-amber-50 to-white">
+          <h2 className="font-bold">🚀 Démarrage rapide : ajoutez vos listes en une seule fois</h2>
+          <p className="mt-1 text-sm text-slate-600">Importez votre fichier Excel, collez votre tableau, ou saisissez plusieurs lignes d&apos;un coup — inutile d&apos;ajouter un par un.</p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            {quick.map((q) => <Link key={q.key} href={`${p}/r/${q.key}/import`} className="btn-ghost bg-white">{q.icon} {q.label}</Link>)}
+          </div>
+        </div>
+      )}
 
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         <Stat label="Recettes aujourd'hui" value={money(s.revenue_today, cur)} />

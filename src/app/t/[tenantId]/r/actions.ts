@@ -2,35 +2,10 @@
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
-import { getResource, type Field } from "@/lib/resources";
+import { getResource } from "@/lib/resources";
 import { failIfError, withParam } from "@/lib/server-actions";
 import { encryptField } from "@/lib/crypto";
-
-function coerce(f: Field, raw: FormDataEntryValue | null): unknown {
-  if (f.type === "bool") return raw === "on" || raw === "true";
-  const v = typeof raw === "string" ? raw.trim() : "";
-  if (v === "") return null;
-  switch (f.type) {
-    case "number":
-    case "money": {
-      const n = Number(v.replace(",", "."));
-      if (!Number.isFinite(n)) throw new Error(`${f.label} : nombre invalide`);
-      if (f.min !== undefined && n < f.min) throw new Error(`${f.label} : minimum ${f.min}`);
-      if (f.max !== undefined && n > f.max) throw new Error(`${f.label} : maximum ${f.max}`);
-      if (f.type === "money" && n < 0) throw new Error(`${f.label} : montant négatif`);
-      return n;
-    }
-    case "date": if (!/^\d{4}-\d{2}-\d{2}$/.test(v)) throw new Error(`${f.label} : date invalide`); return v;
-    case "time": if (!/^\d{2}:\d{2}(:\d{2})?$/.test(v)) throw new Error(`${f.label} : heure invalide`); return v;
-    case "relation": if (!/^[0-9a-f-]{36}$/i.test(v)) throw new Error(`${f.label} : sélection invalide`); return v;
-    case "select":
-      if (f.options && !f.options.some((o) => o.value === v)) throw new Error(`${f.label} : valeur non autorisée`);
-      return f.name === "weekday" ? Number(v) : v;
-    case "currency": if (v !== "USD" && v !== "CDF") throw new Error("Devise invalide"); return v;
-    case "email": if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v)) throw new Error(`${f.label} : e-mail invalide`); return v.slice(0, 200);
-    default: return v.slice(0, f.type === "textarea" ? 4000 : 300);
-  }
-}
+import { coerce } from "@/lib/resource-values";
 
 export async function saveResource(formData: FormData) {
   const tenantId = String(formData.get("_tenant"));
@@ -53,11 +28,18 @@ export async function saveResource(formData: FormData) {
   }
   const supabase = await createClient();
   const q = id
-    ? supabase.from(res.table).update(row).eq("id", id).eq("tenant_id", tenantId)
-    : supabase.from(res.table).insert({ ...row, tenant_id: tenantId });
-  const { error } = await q;
+    ? supabase.from(res.table).update(row).eq("id", id).eq("tenant_id", tenantId).select("id")
+    : supabase.from(res.table).insert({ ...row, tenant_id: tenantId }).select("id");
+  const { data: saved, error } = await q;
   await failIfError(supabase, tenantId, error, `${id ? "update" : "insert"}:${res.table}`, `${back}?${id ? `edit=${id}` : "new=1"}`);
   revalidatePath(back);
+  // Nouvelle personne : sa carte d'identification (générée automatiquement) s'affiche aussitôt
+  const newId = (saved as { id: string }[] | null)?.[0]?.id;
+  if (!id && res.cardType && newId) {
+    revalidatePath(`/t/${tenantId}/cards`);
+    redirect(withParam(`/t/${tenantId}/cards?type=${res.cardType}&id=${newId}`, "success",
+      `${res.singular[0].toUpperCase()}${res.singular.slice(1)} enregistré(e) : voici sa carte, prête à imprimer. Ajoutez sa photo ci-dessous.`));
+  }
   redirect(withParam(back, "success", id ? "Modifications enregistrées." : `${res.singular[0].toUpperCase()}${res.singular.slice(1)} ajouté(e).`));
 }
 
