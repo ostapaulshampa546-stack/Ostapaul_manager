@@ -55,7 +55,9 @@ export function navFor(sector: Sector, tenantId: string): NavItem[] {
   }
   if (sector === "school") {
     return [home,
-      { group: "Administration scolaire", href: `${p}/r/students`, label: "Élèves", icon: "🎒", perm: "academic.read" },
+      { group: "Administration scolaire", href: `${p}/school/classes`, label: "Tableau des classes", icon: "📊", perm: "academic.read" },
+      { group: "Administration scolaire", href: `${p}/school/students`, label: "Liste complète des élèves", icon: "📋", perm: "academic.read" },
+      { group: "Administration scolaire", href: `${p}/r/students`, label: "Inscrire / modifier les élèves", icon: "🎒", perm: "academic.read" },
       { group: "Administration scolaire", href: `${p}/r/teachers`, label: "Enseignants", icon: "👩‍🏫", perm: "academic.read" },
       { group: "Administration scolaire", href: `${p}/r/classes`, label: "Classes & promotions", icon: "🏫", perm: "academic.read" },
       { group: "Administration scolaire", href: `${p}/r/courses`, label: "Cours", icon: "📚", perm: "academic.read" },

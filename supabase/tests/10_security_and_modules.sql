@@ -227,6 +227,14 @@ select tests.ok((select balance from public.student_balances where full_name lik
 update public.student_invoices set paid_amount = 100, status = 'paid' where paid_amount = 40;
 select tests.ok((select status from public.student_invoices where paid_amount = 40) = 'partial', 'statut de paiement non falsifiable');
 
+-- tableaux de l'école : statistiques par élève et par classe
+select tests.ok((select percentage = 80 and class_rank = 1 and attendance_rate = 100 and days_class = 1 and balance = 60
+   from public.school_student_stats(tests.uid('tB'), tests.uid('class'), current_date - 7, current_date, tests.uid('period')) where first_name = 'Grâce'),
+  'tableau élève : cote, rang, présence, solde');
+select tests.ok((select students = 2 and average = 62.5 and passed = 1 and debtors = 2 and attendance_rate = 100
+   from public.school_class_overview(tests.uid('tB'), current_date - 7, current_date, tests.uid('period'))),
+  'tableau de classe : effectif, moyenne, réussite, débiteurs');
+
 -- enseignant : ne note que ses cours
 select tests.act('00000000-0000-0000-0000-0000000000e1');
 select tests.ok(public.accept_invitations() = 1, 'enseignant : invitation acceptée (quota respecté)');
